@@ -3,72 +3,148 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Farol da Carteira</title>
 <style>
-:root{--bg:#f2f5f7;--card:#fff;--ink:#14212b;--mut:#5a6b78;--ln:#d7dee4;--ac:#0f5c6e;--r:#c62f2f;--y:#c98a0b;--g:#2e8b57;--c:#8a97a2}
-@media(prefers-color-scheme:dark){:root{--bg:#0e161c;--card:#16222b;--ink:#e6edf2;--mut:#93a4b0;--ln:#2a3a46;--ac:#5cc0d6}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,'Segoe UI',sans-serif}
-header{padding:18px 20px 0;max-width:1100px;margin:auto}h1{font-size:22px;margin:0;font-weight:800}.sub,.m{color:var(--mut);font-size:13px}
-nav{display:flex;gap:4px;padding:12px 20px 0;max-width:1100px;margin:auto;overflow-x:auto}
-nav button{border:0;background:none;color:var(--mut);font:600 14px inherit;padding:8px 12px;border-bottom:3px solid transparent;cursor:pointer}nav button.on{color:var(--ink);border-color:var(--ac)}
-main{max-width:1100px;margin:auto;padding:16px 20px 40px}h2{font-size:16px;margin:20px 0 8px}
-.kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:18px}.k{background:var(--card);border:1px solid var(--ln);border-radius:6px;padding:10px 12px}.k b{font-size:24px;display:block}.k span{color:var(--mut);font-size:12px}
-.card{background:var(--card);border:1px solid var(--ln);border-radius:6px;padding:12px 14px;margin-bottom:8px}.card.cl{cursor:pointer}.card.cl:hover{border-color:var(--ac)}
-.row{display:flex;gap:10px;align-items:flex-start}.dot{display:inline-block;width:14px;height:14px;border-radius:50%;flex:none;margin-top:3px;vertical-align:middle}
-.R{background:var(--r)}.Y{background:var(--y)}.G{background:var(--g)}.C{background:var(--c)}
-.tag{display:inline-block;font-size:12px;border:1px solid var(--ln);border-radius:4px;padding:1px 6px;margin-right:4px;color:var(--mut)}
-.why{font-size:13px;margin:6px 0 0;padding-left:18px}.bar{display:flex;height:22px;border-radius:4px;overflow:hidden;margin:6px 0}.bar div{color:#fff;font-size:12px;text-align:center;line-height:22px}
-.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;background:var(--card)}th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--ln);font-size:14px;white-space:nowrap}tr.cl{cursor:pointer}tr.cl:hover{background:var(--bg)}
-.f{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}select,input,textarea{font:inherit;padding:6px 8px;border:1px solid var(--ln);border-radius:4px;background:var(--card);color:var(--ink)}
-label{display:block;font-size:13px;color:var(--mut);margin-top:8px}label input,label select,label textarea{width:100%}
-.md{position:fixed;inset:0;background:#0008;display:flex;align-items:center;justify-content:center;padding:16px;z-index:9}.bx{background:var(--card);border-radius:8px;max-width:520px;width:100%;max-height:90vh;overflow:auto;padding:18px}
-.btn{background:var(--ac);color:#fff;border:0;border-radius:4px;padding:8px 14px;font:600 14px inherit;cursor:pointer;margin-top:14px}.btn.s{background:none;color:var(--ink);border:1px solid var(--ln)}.btn:disabled{opacity:.4}
-.err{color:var(--r);font-size:13px;margin-top:8px}.ok{color:var(--g);font-size:13px;margin-top:8px}
+/* ===== 1. TEMA: cores e fontes (mude aqui para trocar a identidade visual) ===== */
+:root{--bg:#f3f5f8;--card:#fff;--ink:#0f1b24;--mut:#5b6b78;--ln:#e1e7ec;--ac:#0f6b7f;--r:#d03a3a;--y:#d9930d;--g:#2f9461;--c:#8795a1;--a:#3b6fb6;--sh:0 1px 2px #0f1b240d,0 4px 14px #0f1b240a;--rad:12px;
+ --soft:color-mix(in srgb,var(--ac) 10%,var(--card))}
+@media(prefers-color-scheme:dark){:root{--bg:#0c141a;--card:#141f27;--ink:#e8eef2;--mut:#93a4b0;--ln:#25343f;--ac:#4fb8ce;--sh:none}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,'Segoe UI',Roboto,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button{font-family:inherit}
+/* ===== 2. ESTRUTURA: menu lateral (desktop) / barra inferior (celular) ===== */
+.app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+.side{position:sticky;top:0;height:100vh;padding:22px 14px;display:flex;flex-direction:column;gap:6px;background:var(--card);border-right:1px solid var(--ln)}
+.brand{padding:0 10px 18px}.brand b{font-size:20px;font-weight:800;letter-spacing:-.3px;display:block}.brand span{color:var(--mut);font-size:12px}
+.side nav{display:flex;flex-direction:column;gap:2px}
+.side nav button{display:flex;align-items:center;gap:10px;border:0;background:none;color:var(--mut);font-weight:600;font-size:14px;padding:10px 12px;border-radius:8px;cursor:pointer;text-align:left}
+.side nav button i{font-style:normal;width:18px;text-align:center;font-size:15px}
+.side nav button:hover{background:var(--bg);color:var(--ink)}.side nav button.on{background:var(--soft);color:var(--ac)}
+.who{margin-top:auto;padding:12px;font-size:13px;color:var(--mut);border-top:1px solid var(--ln)}.who b{color:var(--ink);display:block}
+.main{min-width:0}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:22px 28px 0;max-width:1180px;margin:auto}
+.top h1{margin:0;font-size:24px;letter-spacing:-.4px}.top .sub{color:var(--mut);font-size:13px}
+main{max-width:1180px;margin:auto;padding:18px 28px 48px}
+@media(max-width:899px){.app{display:block}.side{position:fixed;inset:auto 0 0 0;height:auto;flex-direction:row;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));z-index:5;border-right:0;border-top:1px solid var(--ln)}
+ .brand,.who{display:none}.side nav{flex-direction:row;width:100%;justify-content:space-around}.side nav button{flex-direction:column;gap:2px;font-size:11px;padding:6px 4px;text-align:center;flex:1}
+ .top{padding:calc(16px + env(safe-area-inset-top,0px)) 16px 0}main{padding:14px 16px 96px}.top h1{font-size:20px}}
+/* ===== 3. COMPONENTES: botões, etiquetas, formulários ===== */
+.btn{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:9px 16px;font:600 14px inherit;cursor:pointer}.btn:hover{filter:brightness(1.08)}.btn.s{background:var(--card);color:var(--ink);border:1px solid var(--ln)}.btn:disabled{opacity:.4;cursor:default}
+.pill{display:inline-block;font-size:12px;font-weight:600;border-radius:999px;padding:2px 10px;background:var(--bg);color:var(--mut);border:1px solid var(--ln);white-space:nowrap}
+.p-R{background:color-mix(in srgb,var(--r) 14%,var(--card));color:var(--r);border-color:transparent}.p-Y{background:color-mix(in srgb,var(--y) 16%,var(--card));color:var(--y);border-color:transparent}
+.p-A{background:color-mix(in srgb,var(--a) 14%,var(--card));color:var(--a);border-color:transparent}.p-C{background:var(--bg);color:var(--mut)}
+.lv-LE{background:var(--ink);color:var(--card);border-color:transparent}.lv-ME{background:var(--ac);color:#fff;border-color:transparent}.lv-Growth{background:var(--soft);color:var(--ac);border-color:transparent}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;flex:none;vertical-align:middle}.R{background:var(--r)}.Y{background:var(--y)}.G{background:var(--g)}.C{background:var(--c)}
+.m{color:var(--mut);font-size:13px}.err{color:var(--r);font-size:13px;margin-top:10px}h2{font-size:15px;margin:26px 0 10px;font-weight:700}h2:first-child{margin-top:0}
+.fld{display:block;font-size:12px;font-weight:600;color:var(--mut);margin-top:12px}.fld input,.fld select,.fld textarea{display:block;width:100%;margin-top:4px}
+select,input,textarea{font:inherit;padding:8px 10px;border:1px solid var(--ln);border-radius:8px;background:var(--card);color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:2px solid color-mix(in srgb,var(--ac) 40%,transparent);border-color:var(--ac)}
+.box{background:var(--card);border:1px solid var(--ln);border-radius:var(--rad);box-shadow:var(--sh);padding:18px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.fg{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+@media(max-width:899px){.grid2,.fg{grid-template-columns:1fr}}
+/* ===== 4. PAINEL: tiles de farol, indicadores, barras ===== */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.tile{border:0;text-align:left;cursor:pointer;background:var(--card);border-radius:var(--rad);box-shadow:var(--sh);padding:14px 16px;border:1px solid var(--ln);position:relative;overflow:hidden}
+.tile:before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px}.tile.R:before{background:var(--r)}.tile.Y:before{background:var(--y)}.tile.G:before{background:var(--g)}.tile.C:before{background:var(--c)}
+.tile{background:var(--card)}.tile b{display:block;font-size:32px;line-height:1.1;letter-spacing:-1px;color:var(--ink)}.tile span{font-size:13px;color:var(--mut);font-weight:600}
+.tile:hover{border-color:var(--ac)}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:12px}.kpi{padding:10px 14px;border-radius:10px;background:var(--card);border:1px solid var(--ln)}.kpi b{font-size:18px;display:block}.kpi span{font-size:12px;color:var(--mut)}
+@media(max-width:899px){.tiles{grid-template-columns:1fr 1fr}.kpis{grid-template-columns:1fr 1fr 1fr}}
+.cols{display:grid;grid-template-columns:1fr 330px;gap:20px;align-items:start}@media(max-width:1000px){.cols{grid-template-columns:1fr}}
+.hb{display:flex;align-items:center;gap:10px;margin:7px 0;font-size:13px}.hb .lb{width:62px;font-weight:600}.hb .tr{flex:1;height:10px;background:var(--bg);border-radius:6px;overflow:hidden}.hb .tr i{display:block;height:100%;background:var(--ac);border-radius:6px}.hb .vl{width:88px;text-align:right;color:var(--mut)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+/* ===== 5. CARTÃO DE PROJETO (lista de atenção e aba Projetos) ===== */
+.pc{background:var(--card);border:1px solid var(--ln);border-left:5px solid var(--c);border-radius:var(--rad);box-shadow:var(--sh);padding:14px 16px;margin-bottom:10px;cursor:pointer}
+.pc:hover{border-color:var(--ac)}.pc.R{border-left-color:var(--r)}.pc.Y{border-left-color:var(--y)}.pc.G{border-left-color:var(--g)}
+.pc-h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start}.pc-h b{font-size:15px}.pc-h .sep{color:var(--mut);margin:0 6px}.pills{display:flex;gap:6px;flex-wrap:wrap}
+.why1{display:flex;gap:8px;align-items:flex-start;margin:8px 0 6px;font-size:14px}.why1 .dot{margin-top:6px}
+.meta{display:flex;gap:6px 18px;flex-wrap:wrap;font-size:12.5px;color:var(--mut)}
+.pc details{margin-top:8px;font-size:13px}.pc summary{cursor:pointer;color:var(--ac);font-weight:600}.pc ul{margin:6px 0 0;padding-left:18px;color:var(--mut)}
+/* ===== 6. TABELAS E FILTROS ===== */
+.f{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}.f input[type=search],.f input.q{min-width:240px}
+.chip{border:1px solid var(--ln);background:var(--card);color:var(--mut);border-radius:999px;padding:6px 12px;font-weight:600;font-size:13px;cursor:pointer}.chip.on{background:var(--ink);color:var(--card);border-color:var(--ink)}
+.tw{overflow-x:auto;background:var(--card);border:1px solid var(--ln);border-radius:var(--rad);box-shadow:var(--sh)}table{border-collapse:collapse;width:100%}
+th{position:sticky;top:0;text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--mut);background:var(--card);padding:11px 14px;border-bottom:1px solid var(--ln)}
+td{padding:11px 14px;border-bottom:1px solid var(--ln);font-size:14px;white-space:nowrap}tr:last-child td{border-bottom:0}tr.cl{cursor:pointer}tr.cl:hover td{background:var(--bg)}td.n{text-align:right;font-variant-numeric:tabular-nums}
+/* ===== 7. HISTÓRICO, IMPORTAÇÃO, MODAL E AVISOS ===== */
+.tl{border-left:2px solid var(--ln);margin-left:6px;padding-left:18px}.tl .it{position:relative;padding:0 0 16px}.tl .it:before{content:"";position:absolute;left:-25px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--ac);border:2px solid var(--bg)}
+.drop{display:block;border:2px dashed var(--ln);border-radius:var(--rad);padding:26px;text-align:center;color:var(--mut);cursor:pointer;background:var(--card)}.drop:hover{border-color:var(--ac);color:var(--ac)}
+.md{position:fixed;inset:0;background:#0a121899;display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
+.bx{background:var(--card);border-radius:16px;max-width:560px;width:100%;max-height:92vh;overflow:auto;padding:22px;box-shadow:0 20px 60px #0006}.bx h3{margin:0 0 4px;font-size:18px}
+.acts{display:flex;gap:8px;margin-top:16px}#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;background:var(--ink);color:var(--card);padding:10px 18px;border-radius:10px;font-size:14px;z-index:30;max-width:90vw;display:none;box-shadow:0 8px 30px #0004}
+@media(max-width:899px){#toast{bottom:84px}}
+.empty{padding:28px;text-align:center;color:var(--mut)}
 </style></head><body>
-<header><h1>Farol da Carteira</h1><div class="sub" id="sub"></div></header><nav id="nav"></nav><main id="v"></main>
+<div class="app">
+ <aside class="side"><div class="brand"><b>Farol</b><span>da Carteira</span></div><nav id="nav"></nav><div class="who"><b>Wallison Rocha</b>Account Manager</div></aside>
+ <div class="main"><header class="top"><div><h1 id="ttl"></h1><div class="sub" id="sub"></div></div><button class="btn s" onclick="load()">Atualizar</button></header><main id="v"><div class="empty">Carregando…</div></main></div>
+</div><div id="toast"></div>
 <script>
+/* ===== 8. DADOS E API (não mude, a não ser que a API mude) ===== */
 const $=id=>document.getElementById(id),esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const TIERS=["LE","ME","Growth","Legado"],TIPOS=["Implantação","Integração","Melhoria","Acompanhamento","Risco"],BL=["","Aguardando cliente","Aguardando AM","Aguardando engenharia","Aguardando produto","Aguardando terceiro","Outro"];
-const NOME={R:"Vermelho",Y:"Amarelo",G:"Verde",C:"Cinza"};
-let D=null,tab="d",F={},MSG="",IMP=null,FILE=null;
+const NOME={R:"Vermelho",Y:"Amarelo",G:"Verde",C:"Sem informação"},PRI={"crítica":"R","alta":"Y","média":"A","baixa":"C"};
+let D=null,tab="d",F={},IMP=null,FILE=null;
 const tk=()=>{try{return localStorage.getItem("tk")||""}catch(e){return""}};
 async function api(path,o={}){o.headers=Object.assign({"X-Usuario":"Wallison"},o.headers||{});if(tk())o.headers.Authorization="Bearer "+tk();
  const r=await fetch("/api"+path,o);
  if(r.status==401){const t=prompt("Token de acesso da API:");if(t){try{localStorage.setItem("tk",t)}catch(e){}return api(path,o)}throw{erros:["Sem acesso"],avisos:[]}}
  const j=await r.json().catch(()=>({}));if(!r.ok){const d=j.detail;throw{erros:d&&d.erros?d.erros:[typeof d=="string"?d:"Erro "+r.status],avisos:d&&d.avisos||[]}}return j}
 const json=b=>({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)});
-const dot=c=>`<span class="dot ${c}"></span>`,fd=s=>s?s.split("-").reverse().join("/"):"Não informado";
-const card=p=>`<div class="card cl" onclick="edit(${p.id})"><div class="row">${dot(p.farol.cor)}<div><b>${esc(p.conta)}</b> · ${esc(p.nome)} <span class="tag">${p.tipo}</span><span class="tag">Prioridade ${p.prioridade.nivel} (${p.prioridade.score})</span><div class="m">${esc(p.farol.motivo)}</div><ul class="why">${p.prioridade.fatores.map(w=>"<li>"+esc(w)+"</li>").join("")}</ul><div class="m">Próxima ação: ${esc(p.proxima_acao)||"Não informado"}</div></div></div></div>`;
-function dash(){const r=D.resumo,tot=r.projetos||1,bar=[["R",r.vermelho],["Y",r.amarelo],["G",r.verde],["C",r.cinza]].map(x=>x[1]?`<div class="${x[0]}" style="width:${x[1]/tot*100}%">${x[1]}</div>`:"").join("");
- const top=D.projetos.filter(p=>p.farol.cor!="G").slice(0,6),bd=Object.entries(r.bloqueios_por_dono);
- return`${MSG?`<div class="card ok">${esc(MSG)}</div>`:""}<div class="kp">${[["contas_ativas","Contas ativas"],["projetos","Projetos ativos"],["vermelho","Vermelhos"],["amarelo","Amarelos"],["verde","Verdes"],["cinza","Sem informação"],["bloqueados","Bloqueados"],["atrasados","Atrasados"]].map(k=>`<div class="k"><b>${r[k[0]]}</b><span>${k[1]}</span></div>`).join("")}<div class="k"><b>${(r.mrr_ativo/1e3).toFixed(0)}k</b><span>MRR ativo (R$)</span></div></div><div class="bar">${bar}</div><div class="m">Sem informação suficiente não conta como verde.</div><h2>Atenção imediata</h2>${top.map(card).join("")||'<div class="m">Nada crítico agora.</div>'}<h2>Bloqueios por responsável</h2>${bd.length?bd.map(e=>`<span class="tag">${esc(e[0])}: ${e[1]}</span>`).join(""):'<span class="m">Nenhum bloqueio.</span>'}`}
+const dot=c=>`<span class="dot ${c}"></span>`,fd=s=>s?s.split("-").reverse().join("/"):"Não informado",brl=n=>n.toLocaleString("pt-BR",{minimumFractionDigits:2}),errs=e=>(e.erros||[e.message]).join(" · ");
+let tt;function toast(m){const t=$("toast");t.textContent=m;t.style.display="block";clearTimeout(tt);tt=setTimeout(()=>t.style.display="none",5000)}
+/* ===== 9. CARTÃO DE PROJETO (visual de cada projeto) ===== */
+const card=p=>`<article class="pc ${p.farol.cor}" onclick="edit(${p.id})"><div class="pc-h"><div><b>${esc(p.conta)}</b><span class="sep">/</span>${esc(p.nome)}</div><div class="pills"><span class="pill">${p.tipo}</span><span class="pill p-${PRI[p.prioridade.nivel]}">Prioridade ${p.prioridade.nivel} · ${p.prioridade.score}</span></div></div>
+<div class="why1">${dot(p.farol.cor)}<span><b>${NOME[p.farol.cor]}:</b> ${esc(p.farol.motivo)}</span></div>
+<div class="meta"><span>Prazo: ${fd(p.prazo)}</span><span>Próxima ação: ${esc(p.proxima_acao)||"Não informado"}</span><span>Atualizado: ${fd(p.ultima_atualizacao)}</span></div>
+<details onclick="event.stopPropagation()"><summary>Por que esta prioridade?</summary><ul>${p.prioridade.fatores.map(w=>"<li>"+esc(w)+"</li>").join("")}</ul></details></article>`;
+/* ===== 10. ABA PAINEL ===== */
+function dash(){const r=D.resumo,top=D.projetos.filter(p=>p.farol.cor!="G").slice(0,6),bd=Object.entries(r.bloqueios_por_dono);
+ const ativas=D.contas.filter(c=>!c.churn),tot=ativas.reduce((s,c)=>s+c.mrr,0)||1,niv=TIERS.map(t=>[t,ativas.filter(c=>c.nivel==t).reduce((s,c)=>s+c.mrr,0)]),mx=Math.max(...niv.map(n=>n[1]),1);
+ return`<div class="tiles">${[["R",r.vermelho],["Y",r.amarelo],["G",r.verde],["C",r.cinza]].map(x=>`<button class="tile ${x[0]}" onclick="go('p','${x[0]}')"><b>${x[1]}</b><span>${NOME[x[0]]}</span></button>`).join("")}</div>
+<div class="kpis">${[[r.contas_ativas,"Contas ativas"],[r.projetos,"Projetos ativos"],[r.bloqueados,"Bloqueados"],[r.atrasados,"Atrasados"],["R$ "+(r.mrr_ativo/1e3).toFixed(0)+" mil","MRR ativo"]].map(k=>`<div class="kpi"><b>${k[0]}</b><span>${k[1]}</span></div>`).join("")}</div>
+<div class="cols"><div><h2>Atenção imediata</h2>${top.map(card).join("")||'<div class="box empty">Nada crítico agora.</div>'}</div>
+<div><h2>Bloqueios por responsável</h2><div class="box">${bd.length?`<div class="chips">${bd.map(e=>`<span class="pill p-Y">${esc(e[0])}: ${e[1]}</span>`).join("")}</div>`:'<span class="m">Nenhum bloqueio.</span>'}</div>
+<h2>MRR por nível</h2><div class="box">${niv.map(n=>`<div class="hb"><span class="lb">${n[0]}</span><span class="tr"><i style="width:${n[1]/mx*100}%"></i></span><span class="vl">${Math.round(n[1]/tot*100)}% · ${(n[1]/1e3).toFixed(0)}k</span></div>`).join("")}</div>
+<div class="m" style="margin-top:10px">Cinza = sem informação suficiente; nunca conta como verde.</div></div></div>`}
+/* ===== 11. ABA CONTAS ===== */
 function contas(){const L=D.contas.filter(a=>(!F.t||a.nivel==F.t)&&(!F.q||(a.nome+" "+(a.segmento||"")).toLowerCase().includes(F.q.toLowerCase())));
- return`<div class="f"><input placeholder="Buscar conta ou segmento" value="${esc(F.q||"")}" oninput="F.q=this.value;render(1)"><select onchange="F.t=this.value;render()"><option value="">Todos os níveis</option>${TIERS.map(t=>`<option ${F.t==t?"selected":""}>${t}</option>`).join("")}</select></div><div class="tw"><table><tr><th></th><th>Conta</th><th>Nível</th><th>MRR</th><th>Segmento</th><th>Projetos</th></tr>${L.map(a=>{const ps=D.projetos.filter(p=>p.conta_id==a.id),w=["R","Y","C","G"].find(c=>ps.some(p=>p.farol.cor==c));return`<tr class="cl" onclick="conta(${a.id})"><td>${a.churn?dot("C"):dot(w||"G")}</td><td>${esc(a.nome)}</td><td>${a.nivel}</td><td>${a.mrr.toLocaleString("pt-BR",{minimumFractionDigits:2})}</td><td>${esc(a.segmento)||"Não informado"}</td><td>${a.churn?"Churn":ps.length||"Operação normal, sem projeto ativo"}</td></tr>`}).join("")}</table></div>`}
-function projetos(){const L=D.projetos.filter(p=>(!F.f||p.farol.cor==F.f)&&(!F.q2||(p.conta+p.nome).toLowerCase().includes(F.q2.toLowerCase())));
- return`<div class="f"><input placeholder="Buscar conta ou projeto" value="${esc(F.q2||"")}" oninput="F.q2=this.value;render(2)"><select onchange="F.f=this.value;render()"><option value="">Todos os faróis</option>${Object.entries(NOME).map(o=>`<option value="${o[0]}" ${F.f==o[0]?"selected":""}>${o[1]}</option>`).join("")}</select></div>${L.map(card).join("")||'<div class="m">Nenhum projeto.</div>'}`}
-async function hist(){const H=await api("/historico");return H.length?H.map(h=>`<div class="card"><b>${new Date(h.em+"Z").toLocaleString("pt-BR")}</b> · ${esc(h.rotulo)} <span class="m">(${esc(h.usuario)})</span><div class="m">${esc(h.campo)}: ${esc(h.valor_anterior)||"vazio"} → ${esc(h.valor_novo)||"vazio"}</div></div>`).join(""):'<div class="m">Nenhuma alteração registrada ainda.</div>'}
+ return`<div class="f"><input class="q" type="search" placeholder="Buscar conta ou segmento" value="${esc(F.q||"")}" oninput="F.q=this.value;render(1)">${["",...TIERS].map(t=>`<button class="chip ${(F.t||"")==t?"on":""}" onclick="F.t='${t}';render()">${t||"Todos"}</button>`).join("")}</div>
+<div class="tw"><table><tr><th></th><th>Conta</th><th>Nível</th><th style="text-align:right">MRR (R$)</th><th>Segmento</th><th>Projetos</th></tr>${L.map(a=>{const ps=D.projetos.filter(p=>p.conta_id==a.id),w=["R","Y","C","G"].find(c=>ps.some(p=>p.farol.cor==c));
+ return`<tr class="cl" onclick="conta(${a.id})"><td>${dot(a.churn?"C":w||"G")}</td><td><b>${esc(a.nome)}</b></td><td><span class="pill lv-${a.nivel}">${a.nivel}</span></td><td class="n">${brl(a.mrr)}</td><td>${esc(a.segmento)||'<span class="m">Não informado</span>'}</td><td>${a.churn?'<span class="pill">Churn</span>':ps.length||'<span class="m">Operação normal, sem projeto ativo</span>'}</td></tr>`}).join("")}</table></div>`}
+/* ===== 12. ABA PROJETOS ===== */
+function projetos(){const base=D.projetos.filter(p=>!F.q2||(p.conta+p.nome).toLowerCase().includes(F.q2.toLowerCase())),L=base.filter(p=>!F.f||p.farol.cor==F.f),n=c=>base.filter(p=>p.farol.cor==c).length;
+ return`<div class="f"><input class="q" type="search" placeholder="Buscar conta ou projeto" value="${esc(F.q2||"")}" oninput="F.q2=this.value;render(1)"><button class="chip ${!F.f?"on":""}" onclick="F.f='';render()">Todos (${base.length})</button>${Object.entries(NOME).map(o=>`<button class="chip ${F.f==o[0]?"on":""}" onclick="F.f='${o[0]}';render()">${dot(o[0])} ${o[1]} (${n(o[0])})</button>`).join("")}</div>${L.map(card).join("")||'<div class="box empty">Nenhum projeto neste filtro.</div>'}`}
+/* ===== 13. ABA HISTÓRICO ===== */
+async function hist(){const H=await api("/historico");return H.length?`<div class="tl">${H.map(h=>`<div class="it"><b>${esc(h.rotulo)}</b> <span class="m">· ${new Date(h.em+"Z").toLocaleString("pt-BR")} · ${esc(h.usuario)}</span><div class="m">${esc(h.campo)}: ${esc(h.valor_anterior)||"vazio"} → ${esc(h.valor_novo)||"vazio"}</div></div>`).join("")}</div>`:'<div class="box empty">Nenhuma alteração registrada ainda.</div>'}
+/* ===== 14. JANELAS (detalhe da conta e edição do projeto) ===== */
 function modal(h){closeM();const d=document.createElement("div");d.className="md";d.id="m";d.onclick=e=>{if(e.target==d)closeM()};d.innerHTML=`<div class="bx">${h}</div>`;document.body.appendChild(d)}
 function closeM(){const m=$("m");if(m)m.remove()}
-async function conta(id){const a=await api("/contas/"+id);modal(`<h2 style="margin-top:0">${esc(a.nome)}</h2><div class="m">${a.nivel} · R$ ${a.mrr.toLocaleString("pt-BR",{minimumFractionDigits:2})} · ${esc(a.segmento)||"Segmento não informado"}</div><p>${esc(a.nota)||"Sem observações."}</p>${a.projetos.map(card).join("")||'<div class="m">Operação normal: acompanhada em nível de operação, sem projeto ativo.</div>'}<button class="btn s" onclick="closeM()">Fechar</button>`)}
-function edit(id){const p=D.projetos.find(x=>x.id==id);modal(`<h2 style="margin-top:0">${dot(p.farol.cor)} ${esc(p.conta)} · ${esc(p.nome)}</h2><div class="m">${esc(p.farol.motivo)} · Prioridade ${p.prioridade.nivel} (impacto ${p.prioridade.impacto} + urgência ${p.prioridade.urgencia} + risco ${p.prioridade.risco})</div>
-<label>Situação<textarea id="e_sit" rows="2">${esc(p.situacao)}</textarea></label><label>Prazo<input type="date" id="e_prazo" value="${p.prazo||""}"></label><label>Próxima ação<input id="e_prox" value="${esc(p.proxima_acao)}"></label>
-<label>Bloqueio<select id="e_bo">${BL.map(b=>`<option ${p.bloqueio_dono==b||(!p.bloqueio_dono&&!b)?"selected":""}>${b}</option>`).join("")}</select></label><label>Motivo do bloqueio<input id="e_bm" value="${esc(p.bloqueio_motivo)}"></label>
-<label><input type="checkbox" id="e_crit" style="width:auto" ${p.critico?"checked":""}> Situação crítica</label><label>Ajuste manual de impacto<select id="e_adj">${[-1,0,1].map(v=>`<option ${p.ajuste_impacto==v?"selected":""}>${v}</option>`).join("")}</select></label>
-<div class="err" id="e_err"></div><button class="btn" onclick="save(${id})">Salvar</button> <button class="btn s" onclick="closeM()">Cancelar</button>`)}
-async function save(id){const g=k=>$("e_"+k);try{await api("/projetos/"+id,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({situacao:g("sit").value,prazo:g("prazo").value||null,proxima_acao:g("prox").value,bloqueio_dono:g("bo").value||null,bloqueio_motivo:g("bm").value||null,critico:g("crit").checked,ajuste_impacto:+g("adj").value})});closeM();await load()}catch(e){$("e_err").textContent=(e.erros||[e.message]).join(" · ")}}
-const inp=(id,l,t="text")=>`<label>${l}<input id="${id}" type="${t}"></label>`,sel=(id,l,o)=>`<label>${l}<select id="${id}">${o.map(x=>`<option value="${esc(Array.isArray(x)?x[0]:x)}">${esc(Array.isArray(x)?x[1]:x)}</option>`).join("")}</select></label>`;
-function cad(){return`<h2>Nova conta</h2><div class="card">${inp("c_n","Nome")}${sel("c_t","Nível",TIERS)}${inp("c_mrr","MRR (R$)")}${inp("c_seg","Segmento")}${inp("c_nota","Observações")}<button class="btn" onclick="cadC()">Cadastrar conta</button></div><h2>Novo projeto</h2><div class="card">${sel("p_c","Conta",D.contas.filter(a=>!a.churn).map(a=>[a.id,a.nome]))}${inp("p_n","Projeto")}${sel("p_t","Tipo",TIPOS)}${inp("p_sit","Situação")}${inp("p_prazo","Prazo","date")}${inp("p_prox","Próxima ação")}${sel("p_bo","Bloqueio",BL)}${inp("p_bm","Motivo do bloqueio")}<button class="btn" onclick="cadP()">Cadastrar projeto</button></div><div id="msg"></div>`}
+async function conta(id){const a=await api("/contas/"+id);modal(`<h3>${esc(a.nome)}</h3><div class="m"><span class="pill lv-${a.nivel}">${a.nivel}</span> R$ ${brl(a.mrr)} · ${esc(a.segmento)||"Segmento não informado"}</div><p>${esc(a.nota)||'<span class="m">Sem observações.</span>'}</p>${a.projetos.map(card).join("")||'<div class="m">Operação normal: acompanhada em nível de operação, sem projeto ativo.</div>'}<div class="acts"><button class="btn s" onclick="closeM()">Fechar</button></div>`)}
+function edit(id){const p=D.projetos.find(x=>x.id==id);if(!p)return;modal(`<h3>${dot(p.farol.cor)} ${esc(p.conta)} / ${esc(p.nome)}</h3><div class="m">${esc(p.farol.motivo)}<br>Prioridade ${p.prioridade.nivel}: impacto ${p.prioridade.impacto} + urgência ${p.prioridade.urgencia} + risco ${p.prioridade.risco}</div>
+<label class="fld">Situação<textarea id="e_sit" rows="2">${esc(p.situacao)}</textarea></label><div class="fg"><label class="fld">Prazo<input type="date" id="e_prazo" value="${p.prazo||""}"></label><label class="fld">Próxima ação<input id="e_prox" value="${esc(p.proxima_acao)}"></label>
+<label class="fld">Bloqueio<select id="e_bo">${BL.map(b=>`<option ${p.bloqueio_dono==b||(!p.bloqueio_dono&&!b)?"selected":""}>${b}</option>`).join("")}</select></label><label class="fld">Motivo do bloqueio<input id="e_bm" value="${esc(p.bloqueio_motivo)}"></label>
+<label class="fld">Ajuste manual de impacto<select id="e_adj">${[-1,0,1].map(v=>`<option ${p.ajuste_impacto==v?"selected":""}>${v}</option>`).join("")}</select></label><label class="fld"><br><input type="checkbox" id="e_crit" style="display:inline;width:auto" ${p.critico?"checked":""}> Situação crítica</label></div>
+<div class="err" id="e_err"></div><div class="acts"><button class="btn" onclick="save(${id})">Salvar</button><button class="btn s" onclick="closeM()">Cancelar</button></div>`)}
+async function save(id){const g=k=>$("e_"+k);try{await api("/projetos/"+id,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({situacao:g("sit").value,prazo:g("prazo").value||null,proxima_acao:g("prox").value,bloqueio_dono:g("bo").value||null,bloqueio_motivo:g("bm").value||null,critico:g("crit").checked,ajuste_impacto:+g("adj").value})});closeM();toast("Projeto atualizado");await load()}catch(e){$("e_err").textContent=errs(e)}}
+/* ===== 15. ABA CADASTRO ===== */
+const inp=(id,l,t="text")=>`<label class="fld">${l}<input id="${id}" type="${t}"></label>`,sel=(id,l,o)=>`<label class="fld">${l}<select id="${id}">${o.map(x=>`<option value="${esc(Array.isArray(x)?x[0]:x)}">${esc(Array.isArray(x)?x[1]:x)}</option>`).join("")}</select></label>`;
+function cad(){return`<div class="grid2"><div class="box"><h2>Nova conta</h2><div class="fg">${inp("c_n","Nome")}${sel("c_t","Nível",TIERS)}${inp("c_mrr","MRR (R$)")}${inp("c_seg","Segmento")}</div>${inp("c_nota","Observações")}<div class="acts"><button class="btn" onclick="cadC()">Cadastrar conta</button></div><div id="msgc"></div></div>
+<div class="box"><h2>Novo projeto</h2><div class="fg">${sel("p_c","Conta",D.contas.filter(a=>!a.churn).map(a=>[a.id,a.nome]))}${inp("p_n","Projeto")}${sel("p_t","Tipo",TIPOS)}${inp("p_prazo","Prazo","date")}${sel("p_bo","Bloqueio",BL)}${inp("p_bm","Motivo do bloqueio")}</div>${inp("p_sit","Situação")}${inp("p_prox","Próxima ação")}<div class="acts"><button class="btn" onclick="cadP()">Cadastrar projeto</button></div><div id="msgp"></div></div></div>`}
 const gv=i=>$(i).value;
-async function envia(path,body,ok){try{const r=await api(path,json(body));MSG=ok+(r.avisos&&r.avisos.length?". Avisos: "+r.avisos.join(" · "):"");tab="d";await load()}catch(e){$("msg").innerHTML=`<div class="err">Não cadastrado: ${esc((e.erros||[e.message]).join(" · "))}</div>`}}
-const cadC=()=>envia("/contas",{nome:gv("c_n"),nivel:gv("c_t"),mrr:gv("c_mrr"),segmento:gv("c_seg"),nota:gv("c_nota")},"Conta cadastrada");
-const cadP=()=>envia("/projetos",{conta_id:+gv("p_c"),nome:gv("p_n"),tipo:gv("p_t"),situacao:gv("p_sit"),prazo:gv("p_prazo")||null,proxima_acao:gv("p_prox"),bloqueio_dono:gv("p_bo")||null,bloqueio_motivo:gv("p_bm")||null},"Projeto cadastrado");
-function imp(){return`<h2>Importar Excel, CSV ou JSON</h2><div class="m">Contas: nome, nível, MRR, segmento, observações. Projetos: conta, projeto, tipo, situação, prazo, próxima ação, bloqueio, motivo do bloqueio. A aba ou arquivo com a coluna "projeto" é lido como projetos; as demais, como contas. Nada é gravado antes da sua confirmação. Aceita .xlsx, .csv e .json.</div><div class="f" style="margin-top:10px"><input type="file" accept=".xlsx,.xlsm,.csv,.json" onchange="prev(this.files[0])"></div><div id="pv">${pv()}</div>`}
-async function prev(f){if(!f)return;FILE=f;const fd=new FormData();fd.append("arquivo",f);try{IMP=await api("/importacoes?dry_run=true",{method:"POST",body:fd})}catch(e){IMP={erro:(e.erros||[e.message]).join(" · ")}}$("pv").innerHTML=pv()}
-function pv(){if(!IMP)return"";if(IMP.erro)return`<div class="err">${esc(IMP.erro)}</div>`;return`<div class="tw"><table><tr><th>Tipo</th><th>Linha</th><th>Registro</th><th>Resultado</th></tr>${IMP.linhas.map(x=>`<tr><td>${x.tipo}</td><td>${x.linha}</td><td>${esc(x.registro)}</td><td>${x.erros.length?dot("R")+" "+esc(x.erros.join("; ")):dot(x.avisos.length?"Y":"G")+" "+esc(x.avisos.join("; ")||"Pronto")}</td></tr>`).join("")}</table></div><button class="btn" ${IMP.validos?"":"disabled"} onclick="conf()">Importar ${IMP.validos} registros válidos</button>`}
-async function conf(){const fd=new FormData();fd.append("arquivo",FILE);try{const r=await api("/importacoes",{method:"POST",body:fd});IMP=null;MSG=r.gravados+" registros importados"+(r.com_erro?" ("+r.com_erro+" linhas com erro ficaram de fora)":"")+".";tab="d";await load()}catch(e){IMP={erro:(e.erros||[e.message]).join(" · ")};$("pv").innerHTML=pv()}}
-async function load(){try{D=await api("/carteira/farol");await render()}catch(e){$("v").innerHTML=`<div class="err">${esc((e.erros||[e.message]).join(" · "))}</div>`}}
-async function render(keep){const T=[["d","Painel"],["c","Contas"],["p","Projetos"],["h","Histórico"],["n","Cadastro"],["i","Importar"]];
- $("nav").innerHTML=T.map(t=>`<button class="${tab==t[0]?"on":""}" onclick="tab='${t[0]}';MSG=tab=='d'?MSG:'';render()">${t[1]}</button>`).join("");
- $("sub").textContent="Atualizado em "+fd(D.hoje)+" · Wallison Rocha";
- const v=$("v");v.innerHTML=await({d:dash,c:contas,p:projetos,h:hist,n:cad,i:imp}[tab])();if(tab=="d")MSG="";
+async function envia(path,body,ok,box){try{const r=await api(path,json(body));toast(ok+(r.avisos&&r.avisos.length?". Avisos: "+r.avisos.join(" · "):""));tab="d";await load()}catch(e){$(box).innerHTML=`<div class="err">Não cadastrado: ${esc(errs(e))}</div>`}}
+const cadC=()=>envia("/contas",{nome:gv("c_n"),nivel:gv("c_t"),mrr:gv("c_mrr"),segmento:gv("c_seg"),nota:gv("c_nota")},"Conta cadastrada","msgc");
+const cadP=()=>envia("/projetos",{conta_id:+gv("p_c"),nome:gv("p_n"),tipo:gv("p_t"),situacao:gv("p_sit"),prazo:gv("p_prazo")||null,proxima_acao:gv("p_prox"),bloqueio_dono:gv("p_bo")||null,bloqueio_motivo:gv("p_bm")||null},"Projeto cadastrado","msgp");
+/* ===== 16. ABA IMPORTAR ===== */
+function imp(){return`<div class="box"><h2>Importar Excel, CSV ou JSON</h2><div class="m">Contas: nome, nível, MRR, segmento, observações. Projetos: conta, projeto, tipo, situação, prazo, próxima ação, bloqueio, motivo do bloqueio. A aba ou arquivo com a coluna "projeto" é lido como projetos; as demais, como contas. Nada é gravado antes da sua confirmação.</div></div>
+<label class="drop" style="margin-top:14px"><input type="file" hidden accept=".xlsx,.xlsm,.csv,.json" onchange="prev(this.files[0])"><b>Clique para escolher um arquivo</b><br><span class="m">.xlsx, .csv ou .json</span></label><div id="pv" style="margin-top:14px">${pv()}</div>`}
+async function prev(f){if(!f)return;FILE=f;const fm=new FormData();fm.append("arquivo",f);try{IMP=await api("/importacoes?dry_run=true",{method:"POST",body:fm})}catch(e){IMP={erro:errs(e)}}$("pv").innerHTML=pv()}
+function pv(){if(!IMP)return"";if(IMP.erro)return`<div class="err">${esc(IMP.erro)}</div>`;return`<div class="tw"><table><tr><th>Tipo</th><th>Linha</th><th>Registro</th><th>Resultado</th></tr>${IMP.linhas.map(x=>`<tr><td>${x.tipo}</td><td>${x.linha}</td><td>${esc(x.registro)}</td><td>${x.erros.length?dot("R")+" "+esc(x.erros.join("; ")):dot(x.avisos.length?"Y":"G")+" "+esc(x.avisos.join("; ")||"Pronto")}</td></tr>`).join("")}</table></div><div class="acts"><button class="btn" ${IMP.validos?"":"disabled"} onclick="conf()">Importar ${IMP.validos} registros válidos</button></div>`}
+async function conf(){const fm=new FormData();fm.append("arquivo",FILE);try{const r=await api("/importacoes",{method:"POST",body:fm});IMP=null;toast(r.gravados+" registros importados"+(r.com_erro?" ("+r.com_erro+" linhas com erro ficaram de fora)":""));tab="d";await load()}catch(e){IMP={erro:errs(e)};$("pv").innerHTML=pv()}}
+/* ===== 17. NAVEGAÇÃO E CARGA ===== */
+const T=[["d","◉","Painel"],["c","▦","Contas"],["p","☰","Projetos"],["h","⟲","Histórico"],["n","＋","Cadastro"],["i","⇪","Importar"]];
+function go(t,f){tab=t;if(f!==undefined)F.f=f;render()}
+async function load(){try{D=await api("/carteira/farol");await render()}catch(e){$("v").innerHTML=`<div class="box err">${esc(errs(e))}</div>`}}
+async function render(keep){$("nav").innerHTML=T.map(t=>`<button class="${tab==t[0]?"on":""}" onclick="go('${t[0]}')"><i>${t[1]}</i>${t[2]}</button>`).join("");
+ $("ttl").textContent=T.find(t=>t[0]==tab)[2];$("sub").textContent=tab=="d"?"Onde colocar sua atenção hoje · "+fd(D.hoje):"Atualizado em "+fd(D.hoje);
+ const v=$("v");v.innerHTML=await({d:dash,c:contas,p:projetos,h:hist,n:cad,i:imp}[tab])();
  if(keep){const i=v.querySelector("input");if(i){i.focus();i.setSelectionRange(99,99)}}}
 load();
 </script></body></html>
