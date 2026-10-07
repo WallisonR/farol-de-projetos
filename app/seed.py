@@ -51,12 +51,12 @@ PROJ = [
 ]
 
 
-def seed(db):
+def seed(db, dono_id=None):
     if db.scalar(select(func.count()).select_from(Conta)):
         return False
     ids = {}
     for n, nv, mrr, seg, nota, ch in CONTAS:
-        c = Conta(nome=n, nome_norm=norm(n), nivel=nv, mrr=mrr, segmento=seg, nota=nota, churn=bool(ch))
+        c = Conta(nome=n, nome_norm=norm(n), nivel=nv, mrr=mrr, segmento=seg, nota=nota, churn=bool(ch), responsavel_id=dono_id)
         db.add(c); db.flush(); ids[n] = c.id
     for c, n, t, sit, crit, bl in PROJ:
         db.add(Projeto(conta_id=ids[c], nome=n, nome_norm=norm(n), tipo=t, situacao=sit, critico=bool(crit),
