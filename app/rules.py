@@ -8,6 +8,7 @@ TIPOS = ["Implantação", "Integração", "Melhoria", "Acompanhamento", "Risco"]
 BLOQUEIOS = ["Aguardando cliente", "Aguardando AM", "Aguardando engenharia",
              "Aguardando produto", "Aguardando terceiro", "Outro"]
 TETO_LEGADO = 5900
+COMPLEXIDADES = ["Baixa", "Média", "Alta"]
 
 
 def _sa(s):
@@ -55,6 +56,10 @@ def _ajuste(v):
         return 0
 
 
+def _txt(d, k):
+    return str(d.get(k) or "").strip() or None
+
+
 def valida_conta(d, lookup):
     """lookup: {nome_norm: nome} das contas existentes (sem a própria, em edição)."""
     e, w = [], []
@@ -81,12 +86,34 @@ def valida_conta(d, lookup):
                 w.append(f"Possível contrato da conta {p}")
     if nivel == "Legado" and mrr is not None and mrr >= TETO_LEGADO:
         w.append("MRR acima do teto de Legado (R$ 5.900): revisar nível")
-    seg = str(d.get("segmento") or "").strip() or None
+    seg = _txt(d, "segmento")
     if not seg:
         w.append("Segmento não informado")
-    return e, w, dict(nome=nome, nome_norm=k, nivel=nivel, mrr=mrr, segmento=seg,
-                      nota=str(d.get("nota") or "").strip() or None, ajuste_impacto=_ajuste(d.get("ajuste_impacto")),
-                      churn=bool(d.get("churn", False)))
+    cx = None
+    if _txt(d, "complexidade"):
+        cx = next((c for c in COMPLEXIDADES if hk(c) == hk(d.get("complexidade"))), None)
+        if not cx:
+            e.append("Complexidade deve ser: " + ", ".join(COMPLEXIDADES))
+    else:
+        w.append("Complexidade não informada")
+    cnpj = re.sub(r"\D", "", str(d.get("cnpj") or "")) or None
+    if cnpj and len(cnpj) != 14:
+        e.append("CNPJ deve ter 14 dígitos")
+    email = _txt(d, "contato_email")
+    if email and not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
+        e.append("E-mail do contato inválido")
+    datas = {}
+    for campo, rot in (("data_inicio", "Início do contrato"), ("ultimo_contato", "Último contato"), ("proximo_contato", "Próximo contato")):
+        try:
+            datas[campo] = parse_date(d.get(campo))
+        except ValueError:
+            datas[campo] = None
+            e.append(f"{rot}: data inválida (use dd/mm/aaaa)")
+    return e, w, dict(nome=nome, nome_norm=k, nivel=nivel, mrr=mrr, segmento=seg, nota=_txt(d, "nota"),
+                      ajuste_impacto=_ajuste(d.get("ajuste_impacto")), churn=bool(d.get("churn", False)),
+                      razao_social=_txt(d, "razao_social"), cnpj=cnpj, complexidade=cx, erp=_txt(d, "erp"),
+                      integracoes=_txt(d, "integracoes"), contato_nome=_txt(d, "contato_nome"),
+                      contato_email=email, contato_telefone=_txt(d, "contato_telefone"), **datas)
 
 
 def valida_projeto(d, lookup, existentes, checar_dup=True):
