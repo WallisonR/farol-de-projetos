@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-BR"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Farol da Carteira</title>
+<title>Farol da Carteira · Suri Shop by TOTVS</title>
 <style>
-/* ===== 1. TEMA: cores e fontes (mude aqui para trocar a identidade visual) ===== */
+/* ===== 1. TEMA: cores e fontes. ATENÇÃO: valores provisórios; troque pelas cores e tipografia do manual de marca do Suri Shop ===== */
 :root{--bg:#f3f5f8;--card:#fff;--ink:#0f1b24;--mut:#5b6b78;--ln:#e1e7ec;--ac:#0f6b7f;--r:#d03a3a;--y:#d9930d;--g:#2f9461;--c:#8795a1;--a:#3b6fb6;--sh:0 1px 2px #0f1b240d,0 4px 14px #0f1b240a;--rad:12px;
  --soft:color-mix(in srgb,var(--ac) 10%,var(--card))}
 @media(prefers-color-scheme:dark){:root{--bg:#0c141a;--card:#141f27;--ink:#e8eef2;--mut:#93a4b0;--ln:#25343f;--ac:#4fb8ce;--sh:none}}
@@ -71,25 +71,38 @@ td{padding:11px 14px;border-bottom:1px solid var(--ln);font-size:14px;white-spac
 .acts{display:flex;gap:8px;margin-top:16px}#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;background:var(--ink);color:var(--card);padding:10px 18px;border-radius:10px;font-size:14px;z-index:30;max-width:90vw;display:none;box-shadow:0 8px 30px #0004}
 @media(max-width:899px){#toast{bottom:84px}}
 .empty{padding:28px;text-align:center;color:var(--mut)}
+.login{position:fixed;inset:0;background:var(--bg);display:none;align-items:center;justify-content:center;z-index:40;padding:16px}.login .box{width:100%;max-width:380px}
+.p-G{background:color-mix(in srgb,var(--g) 14%,var(--card));color:var(--g);border-color:transparent}
+.fbar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px}.fbar label{font-size:11px;font-weight:600;color:var(--mut)}.fbar select,.fbar input{display:block;margin-top:3px}
+.det{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;font-size:13px;margin:12px 0}.det span{color:var(--mut);display:block;font-size:11px;font-weight:600}.late{color:var(--r);font-weight:600}a.lk{color:var(--ac);cursor:pointer;font-weight:600}
+.brand img{max-width:170px;display:none}
 </style></head><body>
 <div class="app">
- <aside class="side"><div class="brand"><b>Farol</b><span>da Carteira</span></div><nav id="nav"></nav><div class="who"><b>Wallison Rocha</b>Account Manager</div></aside>
- <div class="main"><header class="top"><div><h1 id="ttl"></h1><div class="sub" id="sub"></div></div><button class="btn s" onclick="load()">Atualizar</button></header><main id="v"><div class="empty">Carregando…</div></main></div>
+ <aside class="side"><div class="brand"><img id="logo" src="logo.svg" alt="Suri Shop by TOTVS" onload="this.style.display='block';$('brandtxt').style.display='none'" onerror="this.remove()"><div id="brandtxt"><b>Suri Shop</b><span>by TOTVS · Farol da Carteira</span></div></div><nav id="nav"></nav><div class="who" id="who"></div></aside>
+ <div class="main"><header class="top"><div><h1 id="ttl"></h1><div class="sub" id="sub"></div></div><div style="display:flex;gap:8px"><button class="btn s" onclick="load()">Atualizar</button><button class="btn s" onclick="senhaM()">Senha</button><button class="btn s" onclick="sair()">Sair</button></div></header><main id="v"><div class="empty">Carregando…</div></main></div>
 </div><div id="toast"></div>
+<div class="login" id="login"><form class="box" onsubmit="entrar();return false"><h2 style="margin:0">Suri Shop <span class="m">by TOTVS</span></h2><div class="m">Farol da Carteira · acesso restrito</div>
+<label class="fld">E-mail<input id="l_e" type="email" autocomplete="username" placeholder="nome@empresa.com"></label><label class="fld">Senha<input id="l_s" type="password" autocomplete="current-password"></label>
+<div class="err" id="l_err"></div><div class="acts"><button class="btn" type="submit">Entrar</button></div></form></div>
 <script>
-/* ===== 8. DADOS E API (não mude, a não ser que a API mude) ===== */
+/* ===== 8. DADOS, API E LOGIN (não mude, a não ser que a API mude) ===== */
 const $=id=>document.getElementById(id),esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const TIERS=["LE","ME","Growth","Legado"],TIPOS=["Implantação","Integração","Melhoria","Acompanhamento","Risco"],BL=["","Aguardando cliente","Aguardando AM","Aguardando engenharia","Aguardando produto","Aguardando terceiro","Outro"];
-const NOME={R:"Vermelho",Y:"Amarelo",G:"Verde",C:"Sem informação"},PRI={"crítica":"R","alta":"Y","média":"A","baixa":"C"};
-let D=null,tab="d",F={},IMP=null,FILE=null;
-const tk=()=>{try{return localStorage.getItem("tk")||""}catch(e){return""}};
-async function api(path,o={}){o.headers=Object.assign({"X-Usuario":"Wallison"},o.headers||{});if(tk())o.headers.Authorization="Bearer "+tk();
+const TIERS=["LE","ME","Growth","Legado"],COMPLEX=["Baixa","Média","Alta"],TIPOS=["Implantação","Integração","Melhoria","Acompanhamento","Risco"],BL=["","Aguardando cliente","Aguardando AM","Aguardando engenharia","Aguardando produto","Aguardando terceiro","Outro"];
+const NOME={R:"Vermelho",Y:"Amarelo",G:"Verde",C:"Sem informação"},PRI={"crítica":"R","alta":"Y","média":"A","baixa":"C"},CXC={Alta:"R",Média:"Y",Baixa:"G"};
+let D=null,ME=null,tab="d",F={},IMP=null,FILE=null;
+const tk=()=>{try{return localStorage.getItem("tk")||""}catch(e){return""}},stk=v=>{try{v?localStorage.setItem("tk",v):localStorage.removeItem("tk")}catch(e){}};
+async function api(path,o={}){o.headers=Object.assign({},o.headers||{});if(tk())o.headers.Authorization="Bearer "+tk();
  const r=await fetch("/api"+path,o);
- if(r.status==401){const t=prompt("Token de acesso da API:");if(t){try{localStorage.setItem("tk",t)}catch(e){}return api(path,o)}throw{erros:["Sem acesso"],avisos:[]}}
+ if(r.status==401&&path!="/auth/login"){sair();throw{erros:["Sessão expirada. Entre novamente."],avisos:[]}}
  const j=await r.json().catch(()=>({}));if(!r.ok){const d=j.detail;throw{erros:d&&d.erros?d.erros:[typeof d=="string"?d:"Erro "+r.status],avisos:d&&d.avisos||[]}}return j}
-const json=b=>({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)});
+const json=(b,method="POST")=>({method,headers:{"Content-Type":"application/json"},body:JSON.stringify(b)});
 const dot=c=>`<span class="dot ${c}"></span>`,fd=s=>s?s.split("-").reverse().join("/"):"Não informado",brl=n=>n.toLocaleString("pt-BR",{minimumFractionDigits:2}),errs=e=>(e.erros||[e.message]).join(" · ");
 let tt;function toast(m){const t=$("toast");t.textContent=m;t.style.display="block";clearTimeout(tt);tt=setTimeout(()=>t.style.display="none",5000)}
+async function entrar(){try{const r=await api("/auth/login",json({email:$("l_e").value,senha:$("l_s").value}));stk(r.token);$("login").style.display="none";$("l_err").textContent="";await iniciar()}catch(e){$("l_err").textContent=errs(e)}}
+function sair(){stk("");ME=null;D=null;closeM();$("login").style.display="flex";$("l_s").value=""}
+async function iniciar(){ME=await api("/auth/eu");$("who").innerHTML=`<b>${esc(ME.nome)}</b>${esc(ME.email)}<br><a class="lk" onclick="senhaM()">Alterar senha</a> · <a class="lk" onclick="sair()">Sair</a>`;tab="d";await load()}
+function senhaM(){modal(`<h3>Alterar senha</h3><label class="fld">Senha atual<input id="s_a" type="password"></label><label class="fld">Nova senha (mínimo 8 caracteres)<input id="s_n" type="password"></label><div class="err" id="s_err"></div><div class="acts"><button class="btn" onclick="trocaSenha()">Salvar</button><button class="btn s" onclick="closeM()">Cancelar</button></div>`)}
+async function trocaSenha(){try{await api("/auth/senha",json({atual:$("s_a").value,nova:$("s_n").value}));closeM();toast("Senha alterada")}catch(e){$("s_err").textContent=errs(e)}}
 /* ===== 9. CARTÃO DE PROJETO (visual de cada projeto) ===== */
 const card=p=>`<article class="pc ${p.farol.cor}" onclick="edit(${p.id})"><div class="pc-h"><div><b>${esc(p.conta)}</b><span class="sep">/</span>${esc(p.nome)}</div><div class="pills"><span class="pill">${p.tipo}</span><span class="pill p-${PRI[p.prioridade.nivel]}">Prioridade ${p.prioridade.nivel} · ${p.prioridade.score}</span></div></div>
 <div class="why1">${dot(p.farol.cor)}<span><b>${NOME[p.farol.cor]}:</b> ${esc(p.farol.motivo)}</span></div>
@@ -104,11 +117,21 @@ function dash(){const r=D.resumo,top=D.projetos.filter(p=>p.farol.cor!="G").slic
 <div><h2>Bloqueios por responsável</h2><div class="box">${bd.length?`<div class="chips">${bd.map(e=>`<span class="pill p-Y">${esc(e[0])}: ${e[1]}</span>`).join("")}</div>`:'<span class="m">Nenhum bloqueio.</span>'}</div>
 <h2>MRR por nível</h2><div class="box">${niv.map(n=>`<div class="hb"><span class="lb">${n[0]}</span><span class="tr"><i style="width:${n[1]/mx*100}%"></i></span><span class="vl">${Math.round(n[1]/tot*100)}% · ${(n[1]/1e3).toFixed(0)}k</span></div>`).join("")}</div>
 <div class="m" style="margin-top:10px">Cinza = sem informação suficiente; nunca conta como verde.</div></div></div>`}
-/* ===== 11. ABA CONTAS ===== */
-function contas(){const L=D.contas.filter(a=>(!F.t||a.nivel==F.t)&&(!F.q||(a.nome+" "+(a.segmento||"")).toLowerCase().includes(F.q.toLowerCase())));
- return`<div class="f"><input class="q" type="search" placeholder="Buscar conta ou segmento" value="${esc(F.q||"")}" oninput="F.q=this.value;render(1)">${["",...TIERS].map(t=>`<button class="chip ${(F.t||"")==t?"on":""}" onclick="F.t='${t}';render()">${t||"Todos"}</button>`).join("")}</div>
-<div class="tw"><table><tr><th></th><th>Conta</th><th>Nível</th><th style="text-align:right">MRR (R$)</th><th>Segmento</th><th>Projetos</th></tr>${L.map(a=>{const ps=D.projetos.filter(p=>p.conta_id==a.id),w=["R","Y","C","G"].find(c=>ps.some(p=>p.farol.cor==c));
- return`<tr class="cl" onclick="conta(${a.id})"><td>${dot(a.churn?"C":w||"G")}</td><td><b>${esc(a.nome)}</b></td><td><span class="pill lv-${a.nivel}">${a.nivel}</span></td><td class="n">${brl(a.mrr)}</td><td>${esc(a.segmento)||'<span class="m">Não informado</span>'}</td><td>${a.churn?'<span class="pill">Churn</span>':ps.length||'<span class="m">Operação normal, sem projeto ativo</span>'}</td></tr>`}).join("")}</table></div>`}
+/* ===== 11. ABA CONTAS (filtros por nível, complexidade, segmento, responsável, contato) ===== */
+const dias=s=>s?Math.round((new Date(D.hoje)-new Date(s))/864e5):null;
+const fsel=(k,lb,o)=>`<label>${lb}<select onchange="F.${k}=this.value;render()">${o.map(x=>`<option value="${esc(x[0])}" ${(F[k]||"")==x[0]?"selected":""}>${esc(x[1])}</option>`).join("")}</select></label>`;
+function contas(){const seg=[...new Set(D.contas.map(a=>a.segmento).filter(Boolean))].sort(),hj=D.hoje;
+ const L=D.contas.filter(a=>(!F.t||a.nivel==F.t)&&(!F.cx||(F.cx=="none"?!a.complexidade:a.complexidade==F.cx))&&(!F.sg||a.segmento==F.sg)&&(!F.am||a.responsavel_id==F.am)
+  &&(!F.ct||(F.ct=="sem"?(!a.ultimo_contato||dias(a.ultimo_contato)>30):(a.proximo_contato&&a.proximo_contato<hj)))&&(!F.st||(F.st=="churn"?a.churn:!a.churn))
+  &&(!F.q||[a.nome,a.razao_social,a.segmento,a.contato_nome,a.erp].join(" ").toLowerCase().includes(F.q.toLowerCase())));
+ const adm=ME&&ME.papel=="admin",tot=L.filter(a=>!a.churn).reduce((s,a)=>s+a.mrr,0);
+ return`<div class="fbar"><label>Buscar<input class="q" type="search" placeholder="Conta, contato, ERP…" value="${esc(F.q||"")}" oninput="F.q=this.value;render(1)"></label>
+${fsel("t","Nível",[["","Todos"],...TIERS.map(t=>[t,t])])}${fsel("cx","Complexidade",[["","Todas"],...COMPLEX.map(t=>[t,t]),["none","Não informada"]])}${fsel("sg","Segmento",[["","Todos"],...seg.map(t=>[t,t])])}
+${adm?fsel("am","Responsável",[["","Todos"],...D.responsaveis.map(r=>[r.id,r.nome])]):""}${fsel("ct","Contato",[["","Qualquer"],["sem","Sem contato há 30+ dias"],["venc","Próximo contato vencido"]])}${fsel("st","Situação",[["","Todas"],["ativa","Ativas"],["churn","Encerradas"]])}
+<button class="btn s" onclick="F.t=F.cx=F.sg=F.am=F.ct=F.st=F.q='';render()">Limpar filtros</button></div>
+<div class="m" style="margin-bottom:8px">${L.length} de ${D.contas.length} contas · MRR das ativas filtradas: R$ ${brl(tot)}</div>
+<div class="tw"><table><tr><th></th><th>Conta</th><th>Nível</th><th style="text-align:right">MRR (R$)</th><th>Segmento</th><th>Complexidade</th><th>Contato</th><th>Próx. contato</th>${adm?"<th>Responsável</th>":""}<th>Projetos</th></tr>${L.map(a=>{const ps=D.projetos.filter(p=>p.conta_id==a.id),w=["R","Y","C","G"].find(c=>ps.some(p=>p.farol.cor==c)),venc=a.proximo_contato&&a.proximo_contato<D.hoje;
+ return`<tr class="cl" onclick="conta(${a.id})"><td>${dot(a.churn?"C":w||"G")}</td><td><b>${esc(a.nome)}</b></td><td><span class="pill lv-${a.nivel}">${a.nivel}</span></td><td class="n">${brl(a.mrr)}</td><td>${esc(a.segmento)||'<span class="m">Não informado</span>'}</td><td>${a.complexidade?`<span class="pill p-${CXC[a.complexidade]}">${a.complexidade}</span>`:'<span class="m">Não informada</span>'}</td><td>${esc(a.contato_nome)||'<span class="m">Não informado</span>'}</td><td class="${venc?"late":""}">${a.proximo_contato?fd(a.proximo_contato):'<span class="m">Não agendado</span>'}</td>${adm?`<td>${esc(a.responsavel)||""}</td>`:""}<td>${a.churn?'<span class="pill">Churn</span>':ps.length||'<span class="m">Operação normal</span>'}</td></tr>`}).join("")}</table></div>`}
 /* ===== 12. ABA PROJETOS ===== */
 function projetos(){const base=D.projetos.filter(p=>!F.q2||(p.conta+p.nome).toLowerCase().includes(F.q2.toLowerCase())),L=base.filter(p=>!F.f||p.farol.cor==F.f),n=c=>base.filter(p=>p.farol.cor==c).length;
  return`<div class="f"><input class="q" type="search" placeholder="Buscar conta ou projeto" value="${esc(F.q2||"")}" oninput="F.q2=this.value;render(1)"><button class="chip ${!F.f?"on":""}" onclick="F.f='';render()">Todos (${base.length})</button>${Object.entries(NOME).map(o=>`<button class="chip ${F.f==o[0]?"on":""}" onclick="F.f='${o[0]}';render()">${dot(o[0])} ${o[1]} (${n(o[0])})</button>`).join("")}</div>${L.map(card).join("")||'<div class="box empty">Nenhum projeto neste filtro.</div>'}`}
@@ -117,21 +140,36 @@ async function hist(){const H=await api("/historico");return H.length?`<div clas
 /* ===== 14. JANELAS (detalhe da conta e edição do projeto) ===== */
 function modal(h){closeM();const d=document.createElement("div");d.className="md";d.id="m";d.onclick=e=>{if(e.target==d)closeM()};d.innerHTML=`<div class="bx">${h}</div>`;document.body.appendChild(d)}
 function closeM(){const m=$("m");if(m)m.remove()}
-async function conta(id){const a=await api("/contas/"+id);modal(`<h3>${esc(a.nome)}</h3><div class="m"><span class="pill lv-${a.nivel}">${a.nivel}</span> R$ ${brl(a.mrr)} · ${esc(a.segmento)||"Segmento não informado"}</div><p>${esc(a.nota)||'<span class="m">Sem observações.</span>'}</p>${a.projetos.map(card).join("")||'<div class="m">Operação normal: acompanhada em nível de operação, sem projeto ativo.</div>'}<div class="acts"><button class="btn s" onclick="closeM()">Fechar</button></div>`)}
+async function conta(id){const a=await api("/contas/"+id),f=(l,v)=>`<div><span>${l}</span>${v?esc(v):'<i class="m">Não informado</i>'}</div>`;
+ modal(`<h3>${esc(a.nome)}</h3><div class="m"><span class="pill lv-${a.nivel}">${a.nivel}</span> R$ ${brl(a.mrr)}${a.churn?' · <b>Encerrada (churn)</b>':""}</div>
+<div class="det">${f("Razão social",a.razao_social)}${f("CNPJ",a.cnpj)}${f("Segmento",a.segmento)}${f("Complexidade",a.complexidade)}${f("ERP / sistema",a.erp)}${f("Integrações",a.integracoes)}${f("Contato principal",a.contato_nome)}${f("E-mail",a.contato_email)}${f("Telefone / WhatsApp",a.contato_telefone)}${f("Responsável",a.responsavel)}${f("Início do contrato",a.data_inicio&&fd(a.data_inicio))}${f("Último contato",a.ultimo_contato&&fd(a.ultimo_contato))}${f("Próximo contato",a.proximo_contato&&fd(a.proximo_contato))}</div>
+<p class="m">${esc(a.nota)||"Sem observações."}</p>${a.projetos.map(card).join("")||'<div class="m">Operação normal: acompanhada em nível de operação, sem projeto ativo.</div>'}<div class="acts"><button class="btn" onclick="editConta(${a.id})">Editar conta</button><button class="btn s" onclick="closeM()">Fechar</button></div>`)}
+const CF=[["nome","Nome *"],["razao_social","Razão social"],["cnpj","CNPJ"],["nivel","Nível *","s",TIERS],["mrr","MRR (R$) *"],["segmento","Segmento"],["complexidade","Complexidade","s",["",...COMPLEX]],["erp","ERP / sistema"],["integracoes","Integrações"],["contato_nome","Contato principal"],["contato_email","E-mail do contato"],["contato_telefone","Telefone / WhatsApp"],["data_inicio","Início do contrato","date"],["ultimo_contato","Último contato","date"],["proximo_contato","Próximo contato","date"]];
+function contaForm(px,a={}){const adm=ME&&ME.papel=="admin";return`<div class="fg">${CF.map(f=>f[2]=="s"?`<label class="fld">${f[1]}<select id="${px}${f[0]}">${f[3].map(o=>`<option ${a[f[0]]==o?"selected":""}>${o}</option>`).join("")}</select></label>`:`<label class="fld">${f[1]}<input id="${px}${f[0]}" type="${f[2]||"text"}" value="${esc(a[f[0]])}"></label>`).join("")}
+${adm?`<label class="fld">Responsável (AM)<select id="${px}responsavel_id">${D.responsaveis.map(r=>`<option value="${r.id}" ${a.responsavel_id==r.id||(!a.id&&ME.id==r.id)?"selected":""}>${esc(r.nome)}</option>`).join("")}</select></label>`:""}</div><label class="fld">Observações<textarea id="${px}nota" rows="2">${esc(a.nota)}</textarea></label>`}
+function contaVals(px){const o={};CF.forEach(f=>o[f[0]]=$(px+f[0]).value);o.nota=$(px+"nota").value;const r=$(px+"responsavel_id");if(r)o.responsavel_id=+r.value;return o}
+function editConta(id){const a=D.contas.find(x=>x.id==id);modal(`<h3>Editar conta</h3>${contaForm("x_",a)}<div class="err" id="x_err"></div><div class="acts"><button class="btn" onclick="saveConta(${id})">Salvar</button><button class="btn s" onclick="closeM()">Cancelar</button></div>`)}
+async function saveConta(id){try{await api("/contas/"+id,json(contaVals("x_"),"PATCH"));closeM();toast("Conta atualizada");await load()}catch(e){$("x_err").textContent=errs(e)}}
 function edit(id){const p=D.projetos.find(x=>x.id==id);if(!p)return;modal(`<h3>${dot(p.farol.cor)} ${esc(p.conta)} / ${esc(p.nome)}</h3><div class="m">${esc(p.farol.motivo)}<br>Prioridade ${p.prioridade.nivel}: impacto ${p.prioridade.impacto} + urgência ${p.prioridade.urgencia} + risco ${p.prioridade.risco}</div>
 <label class="fld">Situação<textarea id="e_sit" rows="2">${esc(p.situacao)}</textarea></label><div class="fg"><label class="fld">Prazo<input type="date" id="e_prazo" value="${p.prazo||""}"></label><label class="fld">Próxima ação<input id="e_prox" value="${esc(p.proxima_acao)}"></label>
 <label class="fld">Bloqueio<select id="e_bo">${BL.map(b=>`<option ${p.bloqueio_dono==b||(!p.bloqueio_dono&&!b)?"selected":""}>${b}</option>`).join("")}</select></label><label class="fld">Motivo do bloqueio<input id="e_bm" value="${esc(p.bloqueio_motivo)}"></label>
 <label class="fld">Ajuste manual de impacto<select id="e_adj">${[-1,0,1].map(v=>`<option ${p.ajuste_impacto==v?"selected":""}>${v}</option>`).join("")}</select></label><label class="fld"><br><input type="checkbox" id="e_crit" style="display:inline;width:auto" ${p.critico?"checked":""}> Situação crítica</label></div>
 <div class="err" id="e_err"></div><div class="acts"><button class="btn" onclick="save(${id})">Salvar</button><button class="btn s" onclick="closeM()">Cancelar</button></div>`)}
 async function save(id){const g=k=>$("e_"+k);try{await api("/projetos/"+id,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({situacao:g("sit").value,prazo:g("prazo").value||null,proxima_acao:g("prox").value,bloqueio_dono:g("bo").value||null,bloqueio_motivo:g("bm").value||null,critico:g("crit").checked,ajuste_impacto:+g("adj").value})});closeM();toast("Projeto atualizado");await load()}catch(e){$("e_err").textContent=errs(e)}}
-/* ===== 15. ABA CADASTRO ===== */
+/* ===== 15. ABA CADASTRO (nova conta com todos os dados + novo projeto) ===== */
 const inp=(id,l,t="text")=>`<label class="fld">${l}<input id="${id}" type="${t}"></label>`,sel=(id,l,o)=>`<label class="fld">${l}<select id="${id}">${o.map(x=>`<option value="${esc(Array.isArray(x)?x[0]:x)}">${esc(Array.isArray(x)?x[1]:x)}</option>`).join("")}</select></label>`;
-function cad(){return`<div class="grid2"><div class="box"><h2>Nova conta</h2><div class="fg">${inp("c_n","Nome")}${sel("c_t","Nível",TIERS)}${inp("c_mrr","MRR (R$)")}${inp("c_seg","Segmento")}</div>${inp("c_nota","Observações")}<div class="acts"><button class="btn" onclick="cadC()">Cadastrar conta</button></div><div id="msgc"></div></div>
-<div class="box"><h2>Novo projeto</h2><div class="fg">${sel("p_c","Conta",D.contas.filter(a=>!a.churn).map(a=>[a.id,a.nome]))}${inp("p_n","Projeto")}${sel("p_t","Tipo",TIPOS)}${inp("p_prazo","Prazo","date")}${sel("p_bo","Bloqueio",BL)}${inp("p_bm","Motivo do bloqueio")}</div>${inp("p_sit","Situação")}${inp("p_prox","Próxima ação")}<div class="acts"><button class="btn" onclick="cadP()">Cadastrar projeto</button></div><div id="msgp"></div></div></div>`}
+function cad(){return`<div class="box"><h2>Nova conta</h2>${contaForm("c_")}<div class="acts"><button class="btn" onclick="cadC()">Cadastrar conta</button></div><div id="msgc"></div></div>
+<div class="box" style="margin-top:16px"><h2>Novo projeto</h2><div class="fg">${sel("p_c","Conta",D.contas.filter(a=>!a.churn).map(a=>[a.id,a.nome]))}${inp("p_n","Projeto")}${sel("p_t","Tipo",TIPOS)}${inp("p_prazo","Prazo","date")}${sel("p_bo","Bloqueio",BL)}${inp("p_bm","Motivo do bloqueio")}</div>${inp("p_sit","Situação")}${inp("p_prox","Próxima ação")}<div class="acts"><button class="btn" onclick="cadP()">Cadastrar projeto</button></div><div id="msgp"></div></div>`}
 const gv=i=>$(i).value;
-async function envia(path,body,ok,box){try{const r=await api(path,json(body));toast(ok+(r.avisos&&r.avisos.length?". Avisos: "+r.avisos.join(" · "):""));tab="d";await load()}catch(e){$(box).innerHTML=`<div class="err">Não cadastrado: ${esc(errs(e))}</div>`}}
-const cadC=()=>envia("/contas",{nome:gv("c_n"),nivel:gv("c_t"),mrr:gv("c_mrr"),segmento:gv("c_seg"),nota:gv("c_nota")},"Conta cadastrada","msgc");
+async function envia(path,body,ok,box){try{const r=await api(path,json(body));toast(ok+(r.avisos&&r.avisos.length?". Avisos: "+r.avisos.join(" · "):""));tab=path=="/contas"?"c":"d";await load()}catch(e){$(box).innerHTML=`<div class="err">Não cadastrado: ${esc(errs(e))}</div>`}}
+const cadC=()=>envia("/contas",contaVals("c_"),"Conta cadastrada","msgc");
 const cadP=()=>envia("/projetos",{conta_id:+gv("p_c"),nome:gv("p_n"),tipo:gv("p_t"),situacao:gv("p_sit"),prazo:gv("p_prazo")||null,proxima_acao:gv("p_prox"),bloqueio_dono:gv("p_bo")||null,bloqueio_motivo:gv("p_bm")||null},"Projeto cadastrado","msgp");
+/* ===== 15b. ABA USUÁRIOS (somente administrador) ===== */
+async function usuarios(){const U=await api("/usuarios");return`<div class="grid2"><div class="box"><h2>Novo usuário</h2>${inp("u_e","E-mail","email")}${inp("u_n","Nome")}${inp("u_s","Senha provisória (mín. 8 caracteres)","password")}${sel("u_p","Perfil",[["am","AM (vê só as próprias contas)"],["admin","Administrador (vê tudo)"]])}<div class="acts"><button class="btn" onclick="addU()">Criar usuário</button></div><div id="msgu"></div><p class="m">Passe a senha provisória ao usuário; ele pode trocá-la em "Senha".</p></div>
+<div class="tw"><table><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th></th></tr>${U.map(u=>`<tr><td><b>${esc(u.nome)}</b> ${u.ativo?"":'<span class="pill">inativo</span>'}</td><td>${esc(u.email)}</td><td>${u.papel=="admin"?"Administrador":"AM"}</td><td><a class="lk" onclick="togU(${u.id},${!u.ativo})">${u.ativo?"Desativar":"Reativar"}</a> · <a class="lk" onclick="resU(${u.id})">Redefinir senha</a></td></tr>`).join("")}</table></div></div>`}
+async function addU(){try{await api("/usuarios",json({email:gv("u_e"),nome:gv("u_n"),senha:gv("u_s"),papel:gv("u_p")}));toast("Usuário criado");render()}catch(e){$("msgu").innerHTML=`<div class="err">${esc(errs(e))}</div>`}}
+async function togU(id,ativo){try{await api("/usuarios/"+id,json({ativo},"PATCH"));render()}catch(e){toast(errs(e))}}
+async function resU(id){const s=prompt("Nova senha provisória (mínimo 8 caracteres):");if(!s)return;try{await api("/usuarios/"+id,json({senha:s},"PATCH"));toast("Senha redefinida")}catch(e){toast(errs(e))}}
 /* ===== 16. ABA IMPORTAR ===== */
 function imp(){return`<div class="box"><h2>Importar Excel, CSV ou JSON</h2><div class="m">Contas: nome, nível, MRR, segmento, observações. Projetos: conta, projeto, tipo, situação, prazo, próxima ação, bloqueio, motivo do bloqueio. A aba ou arquivo com a coluna "projeto" é lido como projetos; as demais, como contas. Nada é gravado antes da sua confirmação.</div></div>
 <label class="drop" style="margin-top:14px"><input type="file" hidden accept=".xlsx,.xlsm,.csv,.json" onchange="prev(this.files[0])"><b>Clique para escolher um arquivo</b><br><span class="m">.xlsx, .csv ou .json</span></label><div id="pv" style="margin-top:14px">${pv()}</div>`}
@@ -139,12 +177,12 @@ async function prev(f){if(!f)return;FILE=f;const fm=new FormData();fm.append("ar
 function pv(){if(!IMP)return"";if(IMP.erro)return`<div class="err">${esc(IMP.erro)}</div>`;return`<div class="tw"><table><tr><th>Tipo</th><th>Linha</th><th>Registro</th><th>Resultado</th></tr>${IMP.linhas.map(x=>`<tr><td>${x.tipo}</td><td>${x.linha}</td><td>${esc(x.registro)}</td><td>${x.erros.length?dot("R")+" "+esc(x.erros.join("; ")):dot(x.avisos.length?"Y":"G")+" "+esc(x.avisos.join("; ")||"Pronto")}</td></tr>`).join("")}</table></div><div class="acts"><button class="btn" ${IMP.validos?"":"disabled"} onclick="conf()">Importar ${IMP.validos} registros válidos</button></div>`}
 async function conf(){const fm=new FormData();fm.append("arquivo",FILE);try{const r=await api("/importacoes",{method:"POST",body:fm});IMP=null;toast(r.gravados+" registros importados"+(r.com_erro?" ("+r.com_erro+" linhas com erro ficaram de fora)":""));tab="d";await load()}catch(e){IMP={erro:errs(e)};$("pv").innerHTML=pv()}}
 /* ===== 17. NAVEGAÇÃO E CARGA ===== */
-const T=[["d","◉","Painel"],["c","▦","Contas"],["p","☰","Projetos"],["h","⟲","Histórico"],["n","＋","Cadastro"],["i","⇪","Importar"]];
+const T0=[["d","◉","Painel"],["c","▦","Contas"],["p","☰","Projetos"],["h","⟲","Histórico"],["n","＋","Cadastro"],["i","⇪","Importar"]],tabs=()=>ME&&ME.papel=="admin"?[...T0,["u","⚙","Usuários"]]:T0;
 function go(t,f){tab=t;if(f!==undefined)F.f=f;render()}
-async function load(){try{D=await api("/carteira/farol");await render()}catch(e){$("v").innerHTML=`<div class="box err">${esc(errs(e))}</div>`}}
-async function render(keep){$("nav").innerHTML=T.map(t=>`<button class="${tab==t[0]?"on":""}" onclick="go('${t[0]}')"><i>${t[1]}</i>${t[2]}</button>`).join("");
- $("ttl").textContent=T.find(t=>t[0]==tab)[2];$("sub").textContent=tab=="d"?"Onde colocar sua atenção hoje · "+fd(D.hoje):"Atualizado em "+fd(D.hoje);
- const v=$("v");v.innerHTML=await({d:dash,c:contas,p:projetos,h:hist,n:cad,i:imp}[tab])();
+async function load(){try{D=await api("/carteira/farol");await render()}catch(e){if(tk())$("v").innerHTML=`<div class="box err">${esc(errs(e))}</div>`}}
+async function render(keep){if(!D)return;$("nav").innerHTML=tabs().map(t=>`<button class="${tab==t[0]?"on":""}" onclick="go('${t[0]}')"><i>${t[1]}</i>${t[2]}</button>`).join("");
+ $("ttl").textContent=tabs().find(t=>t[0]==tab)[2];$("sub").textContent=(tab=="d"?"Onde colocar sua atenção hoje · ":"Atualizado em ")+fd(D.hoje)+(ME?" · "+ME.nome:"");
+ const v=$("v");v.innerHTML=await({d:dash,c:contas,p:projetos,h:hist,n:cad,i:imp,u:usuarios}[tab])();
  if(keep){const i=v.querySelector("input");if(i){i.focus();i.setSelectionRange(99,99)}}}
-load();
+if(tk())iniciar().catch(()=>{});else sair();
 </script></body></html>
