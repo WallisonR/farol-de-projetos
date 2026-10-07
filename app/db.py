@@ -31,6 +31,17 @@ class Base(DeclarativeBase):
     pass
 
 
+class User(Base):
+    __tablename__ = "users"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    email: Mapped[str] = mapped_column(String(160), unique=True)
+    nome: Mapped[str] = mapped_column(String(120))
+    senha_hash: Mapped[str] = mapped_column(String(300))
+    papel: Mapped[str] = mapped_column(String(10), default="am")  # admin | am
+    ativo: Mapped[bool] = mapped_column(Boolean, default=True)
+    criado_em: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+
 class Conta(Base):
     __tablename__ = "contas"
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -42,6 +53,18 @@ class Conta(Base):
     nota: Mapped[str | None] = mapped_column(Text, nullable=True)
     churn: Mapped[bool] = mapped_column(Boolean, default=False)
     ajuste_impacto: Mapped[int] = mapped_column(Integer, default=0)
+    razao_social: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    cnpj: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    complexidade: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    erp: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    integracoes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    contato_nome: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    contato_email: Mapped[str | None] = mapped_column(String(160), nullable=True)
+    contato_telefone: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    data_inicio: Mapped[date | None] = mapped_column(Date, nullable=True)
+    ultimo_contato: Mapped[date | None] = mapped_column(Date, nullable=True)
+    proximo_contato: Mapped[date | None] = mapped_column(Date, nullable=True)
+    responsavel_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("users.id"), nullable=True)
     atualizado_em: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     projetos = relationship("Projeto", back_populates="conta")
 
@@ -73,6 +96,7 @@ class Historico(Base):
     entidade: Mapped[str] = mapped_column(String(20))
     entidade_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
     rotulo: Mapped[str] = mapped_column(String(300), default="")
+    responsavel_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
     campo: Mapped[str] = mapped_column(String(60))
     valor_anterior: Mapped[str | None] = mapped_column(Text, nullable=True)
     valor_novo: Mapped[str | None] = mapped_column(Text, nullable=True)
@@ -86,3 +110,27 @@ class Importacao(Base):
     linhas_ok: Mapped[int] = mapped_column(Integer)
     linhas_erro: Mapped[int] = mapped_column(Integer)
     usuario: Mapped[str] = mapped_column(String(80), default="api")
+
+
+NOVAS_COLUNAS = {"contas": {"razao_social": "VARCHAR(200)", "cnpj": "VARCHAR(20)", "complexidade": "VARCHAR(10)",
+                            "erp": "VARCHAR(120)", "integracoes": "TEXT", "contato_nome": "VARCHAR(120)",
+                            "contato_email": "VARCHAR(160)", "contato_telefone": "VARCHAR(40)", "data_inicio": "DATE",
+                            "ultimo_contato": "DATE", "proximo_contato": "DATE", "responsavel_id": "INTEGER"},
+                 "historico": {"responsavel_id": "INTEGER"}}
+
+
+def migrar():
+    """Adiciona colunas novas em bancos criados por versões anteriores (create_all não altera tabelas existentes)."""
+    from sqlalchemy import inspect, text
+    insp = inspect(engine)
+    for tabela, cols in NOVAS_COLUNAS.items():
+        if not insp.has_table(tabela):
+            continue
+        existentes = {c["name"] for c in insp.get_columns(tabela)}
+        for nome, tipo in cols.items():
+            if nome not in existentes:
+                try:
+                    with engine.begin() as cx:
+                        cx.execute(text(f"ALTER TABLE {tabela} ADD COLUMN {nome} {tipo}"))
+                except Exception:
+                    pass  # outra instância adicionou ao mesmo tempo
