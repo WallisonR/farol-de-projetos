@@ -43,7 +43,7 @@ main{max-width:1320px;margin:auto;padding:18px 36px 56px}
 .pill{display:inline-block;font-size:11.5px;font-weight:600;border-radius:999px;padding:1px 9px;background:var(--el);color:var(--mut);white-space:nowrap}
 .lv-LE{background:var(--ac);color:#04141b}.lv-ME{background:var(--acs);color:var(--ac)}.lv-Growth{background:var(--el);color:var(--ink)}.lv-Legado{background:transparent;border:1px solid var(--ln2);color:var(--mut)}
 .cx{font-size:12.5px;font-weight:600}.cx-Alta{color:var(--ink)}.cx-Média{color:var(--mut)}.cx-Baixa{color:var(--dim)}
-.dot{display:inline-block;width:10px;height:10px;border-radius:50%;flex:none;vertical-align:middle;transition:background .3s}.R{background:var(--r)}.Y{background:var(--y)}.G{background:var(--g)}.C{background:var(--c)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;flex:none;vertical-align:middle;transition:background .3s}.dot.R,.rk i.R{background:var(--r)}.dot.Y,.rk i.Y{background:var(--y)}.dot.G{background:var(--g)}.dot.C{background:var(--c)}
 .m{color:var(--mut);font-size:13px}.dim{color:var(--dim)}.err{color:var(--r);font-size:13px;margin-top:10px}h2{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 0 12px;font-weight:700}
 .fld{display:block;font-size:11.5px;font-weight:650;color:var(--mut);margin-top:12px}.fld input,.fld select,.fld textarea{display:block;width:100%;margin-top:4px}
 select,input,textarea{font:inherit;padding:8px 10px;border:1px solid var(--ln2);border-radius:8px;background:var(--bg);color:var(--ink);transition:border-color .15s}
@@ -57,7 +57,6 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--ac);box-sha
 .st{cursor:pointer;transition:transform .15s}.st:hover{transform:translateY(-2px)}.st b{display:block;font-size:40px;line-height:1;letter-spacing:-1.5px;font-weight:750}.st span{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:650;color:var(--mut);margin-top:6px}
 .st.C b{font-size:26px;color:var(--mut)}.st.C span{color:var(--dim)}.st.R b{color:var(--r)}
 .mini{display:flex;gap:26px;flex-wrap:wrap;margin-left:auto;padding-bottom:4px}.mini div{font-size:12px;color:var(--dim)}.mini b{display:block;font-size:19px;color:var(--ink);letter-spacing:-.4px}
-.dist{display:flex;height:5px;border-radius:5px;overflow:hidden;gap:2px;margin-bottom:26px}.dist i{display:block;border-radius:3px}
 .home{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:44px;align-items:start}@media(max-width:1180px){.home{grid-template-columns:1fr;gap:30px}}
 .sec{margin-bottom:34px}.sec .hd{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}.sec .hd h2{margin:0}.sec .hd a{margin-left:auto}.sec .sb{color:var(--dim);font-size:13px;margin-bottom:10px}
 a.lk{color:var(--ac);cursor:pointer;font-weight:650;font-size:13px}a.lk:hover{text-decoration:underline}
@@ -66,21 +65,27 @@ a.lk{color:var(--ac);cursor:pointer;font-weight:650;font-size:13px}a.lk:hover{te
 .bq{padding:9px 0;border-bottom:1px solid var(--ln);cursor:pointer}.bq:last-child{border-bottom:0}.bq:hover b{color:var(--ac)}.bq .t{display:flex;gap:10px}.bq .t span{margin-left:auto;font-weight:700}
 .tl{border-left:1px solid var(--ln2);margin-left:5px;padding-left:18px}.tl .it{position:relative;padding:0 0 14px}.tl .it:before{content:"";position:absolute;left:-23px;top:7px;width:9px;height:9px;border-radius:50%;background:var(--ac);box-shadow:0 0 0 3px var(--bg)}.tl .tm{font-size:11.5px;color:var(--dim);font-weight:650}
 .hb{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:13px}.hb .lb{width:62px;font-weight:600}.hb .tr{flex:1;height:7px;background:var(--el);border-radius:6px;overflow:hidden}.hb .tr i{display:block;height:100%;background:var(--ac);border-radius:6px}.hb .vl{width:92px;text-align:right;color:var(--mut)}
-/* ===== 5. LINHA DE PROJETO (usada em Foco de hoje, Riscos, Bloqueios e Projetos) ===== */
-.fr{position:relative;padding:16px 14px 14px 20px;border-bottom:1px solid var(--ln);cursor:pointer;border-radius:8px;transition:background .15s}
-.fr:before{content:"";position:absolute;left:4px;top:16px;bottom:16px;width:3px;border-radius:3px;background:var(--c);transition:background .3s}.fr.R:before{background:var(--r)}.fr.Y:before{background:var(--y)}.fr.G:before{background:var(--g)}
-.fr:hover{background:var(--sf)}.fr:hover .btn.s{border-color:var(--ac);color:var(--ac)}
-.fh{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.fh b{font-size:16px}.fh .sep{color:var(--dim)}.fh .pn{color:var(--ink);font-size:15px}
-.lvl{font-size:10.5px;font-weight:800;letter-spacing:.1em;padding:2px 8px;border-radius:5px;background:var(--el)}.lvl.R{color:var(--r);background:color-mix(in srgb,var(--r) 14%,transparent)}.lvl.Y{color:var(--y);background:color-mix(in srgb,var(--y) 14%,transparent)}.lvl.G{color:var(--g);background:color-mix(in srgb,var(--g) 14%,transparent)}.lvl.C{color:var(--mut)}
-.lvl.R,.lvl.Y,.lvl.G,.lvl.C{width:auto}.pri{margin-left:auto;font-size:11.5px;font-weight:700;color:var(--dim)}
-.why{margin:6px 0 12px;color:var(--mut);font-size:14px}
-.fm{display:grid;grid-template-columns:90px 100px minmax(120px,1fr) 110px minmax(200px,1.6fr);gap:14px 18px;align-items:start}
-.fm .lb,.lb{display:block;font-size:10px;font-weight:750;letter-spacing:.1em;color:var(--dim);margin-bottom:2px}.fm b{font-size:14px;display:block}.fm small{display:block;font-size:12px}
-.im3{color:var(--r)}.im2{color:var(--y)}.im1{color:var(--mut)}.blk{color:var(--y)}.late{color:var(--r);font-weight:650}.soon{color:var(--y);font-weight:650}
-.nx{background:var(--acs);border-radius:8px;padding:7px 11px;margin:-4px 0;cursor:text;transition:box-shadow .15s}.nx:hover{box-shadow:inset 0 0 0 1px var(--ac)}.nx b{color:var(--ac);font-weight:650}.nx .def{color:var(--mut);font-weight:550}
+/* ===== 5. LINHA DE PROJETO (usada em Foco de hoje, Riscos, Bloqueios e Projetos). O status só aparece na barra lateral, na etiqueta e nos pontos: o fundo é sempre neutro ===== */
+.fr{position:relative;background:var(--sf);border-radius:12px;padding:18px 22px 14px 26px;margin-bottom:12px;cursor:pointer;transition:background .15s}
+.fr:before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:0 3px 3px 0;background:var(--c);transition:background .3s}
+.fr.R:before{background:var(--r)}.fr.Y:before{background:var(--y)}.fr.G:before{background:var(--g)}
+.fr:hover{background:var(--el)}
+.fh{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.fh b{font-size:16px}.fh .sep{color:var(--dim)}.fh .pn{font-size:15px}
+.lvl{font-size:10.5px;font-weight:800;letter-spacing:.1em;padding:2px 8px;border-radius:5px;background:var(--el)}.lvl.R{color:var(--r);background:color-mix(in srgb,var(--r) 13%,transparent)}.lvl.Y{color:var(--y);background:color-mix(in srgb,var(--y) 13%,transparent)}.lvl.G{color:var(--g);background:color-mix(in srgb,var(--g) 13%,transparent)}.lvl.C{color:var(--mut)}
+.prc{margin-left:auto;font-size:12px;color:var(--mut);background:var(--el);border-radius:6px;padding:3px 10px;white-space:nowrap;cursor:help}.fr:hover .prc{background:var(--bg)}.prc b{color:var(--ink)}
+.why{margin:8px 0 16px;font-size:14.5px;opacity:.88}
+.fm{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px 20px}
+.lb{display:block;font-size:10px;font-weight:750;letter-spacing:.1em;color:var(--dim);margin-bottom:3px}.fm b{font-size:14px;display:block}.fm small{display:block;font-size:12px}
+.lvb{display:inline-flex;gap:2px;vertical-align:middle;margin-right:6px}.lvb i{width:11px;height:6px;border-radius:2px;background:var(--ln2)}.lvb.l1 i:nth-child(1),.lvb.l2 i:nth-child(-n+2),.lvb.l3 i{background:var(--ink)}
+.blk{color:var(--y)}.late{color:var(--r);font-weight:650}.soon,.pend{color:var(--y);font-weight:650}
+.nx{display:block;margin-top:14px;background:var(--acs);border-radius:8px;padding:9px 13px;cursor:text;transition:box-shadow .15s}.nx:hover{box-shadow:inset 0 0 0 1px var(--ac)}.nx b{color:var(--ac);font-weight:650;font-size:14px}.nx em{font-style:normal;opacity:.55;margin-left:6px;font-size:12px}
+.nx.pend{background:transparent;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--y) 45%,transparent)}.nx.pend .lb{color:var(--y)}.nx.pend b{color:var(--mut);font-weight:550}.nx.pend:hover{box-shadow:inset 0 0 0 1px var(--y)}
 .nxi{width:100%;padding:4px 6px;font-size:13.5px}
-.fa{display:flex;align-items:center;gap:14px;margin-top:10px}.fa details{font-size:12.5px;color:var(--mut)}.fa summary{cursor:pointer;color:var(--dim);font-weight:600}.fa summary:hover{color:var(--ac)}.fa ul{margin:6px 0 0;padding-left:18px}.fa .btn{margin-left:auto}
-@media(max-width:899px){.fm{grid-template-columns:1fr 1fr}.nx{grid-column:1/-1}.pri{display:none}}
+.fa{display:flex;align-items:flex-start;gap:14px;margin-top:12px}.fa details{flex:1;font-size:12.5px;color:var(--mut)}.fa summary{cursor:pointer;color:var(--dim);font-weight:600;padding:4px 0}.fa summary:hover{color:var(--ac)}
+.fa .vp{margin-left:auto;padding:4px 2px;white-space:nowrap}
+.why2{margin-top:8px;padding:12px 14px;background:var(--bg);border-radius:8px}.why2 ul{margin:4px 0 10px;padding-left:18px}.why2 li{margin:2px 0}
+.fb{display:flex;gap:8px 24px;flex-wrap:wrap;align-items:center;margin:6px 0}.fb div{display:flex;align-items:center;gap:8px;color:var(--mut)}
+@media(max-width:899px){.fm{grid-template-columns:1fr 1fr}.prc{margin-left:0}.fa{flex-direction:column}.fa .vp{margin-left:0}}
 /* ===== 6. TABELAS E FILTROS ===== */
 .f{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}.f input.q{min-width:240px}
 .chip{border:1px solid var(--ln2);background:transparent;color:var(--mut);border-radius:999px;padding:5px 13px;font-weight:600;font-size:13px;cursor:pointer;transition:all .15s}.chip:hover{color:var(--ink)}.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
@@ -99,6 +104,10 @@ td{padding:12px 14px;border-bottom:1px solid var(--ln);font-size:14px;white-spac
 .login{position:fixed;inset:0;background:var(--bg);display:none;align-items:center;justify-content:center;z-index:90;padding:16px}.login .box{width:100%;max-width:380px;border:1px solid var(--ln2)}
 .sk i{display:block;height:72px;border-radius:10px;margin-bottom:12px;background:linear-gradient(90deg,var(--sf),var(--el),var(--sf));background-size:200% 100%;animation:sh 1.2s infinite}.sk i:first-child{height:96px}@keyframes sh{to{background-position:-200% 0}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+[data-tip]:hover:after{white-space:normal;width:max-content;max-width:250px;line-height:1.4}.prc[data-tip]:hover:after{left:auto;right:0}
+.ni.hi{color:var(--ink);font-weight:650}.ni.hi i{opacity:1}.ni.sm{font-size:13px;color:var(--dim);padding:6px 12px;font-weight:500}.ni.sm:hover{color:var(--ink)}.ng{padding-top:22px}
+.mini{border-left:1px solid var(--ln);padding-left:26px}@media(max-width:899px){.mini{border-left:0;padding-left:0;margin-left:0}}
+.ra{display:flex;align-items:center;gap:10px;padding:9px 6px;margin:0 -6px;border-radius:8px;cursor:pointer;transition:background .15s}.ra:hover{background:var(--sf)}.ra small{display:block;font-size:12px}.ra .v{margin-left:auto;font-weight:650;font-variant-numeric:tabular-nums}
 </style></head><body>
 <div class="app" id="app"><div class="scrim" onclick="drawer(false)"></div>
  <aside class="side"><div class="brand"><img id="logo" src="logo.svg" alt="Suri Shop by TOTVS" style="display:none;max-width:170px" onload="this.style.display='block';$('brandtxt').style.display='none'" onerror="this.remove()"><div id="brandtxt"><b>SURI SHOP</b><span>by TOTVS · Farol da Carteira</span></div></div><nav id="nav"></nav><div class="sfoot">Suri Shop by TOTVS</div></aside>
@@ -133,15 +142,17 @@ const fold=s=>String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLo
 const mil=n=>n>=1000?"R$ "+(n/1000).toLocaleString("pt-BR",{maximumFractionDigits:n>=1e5?0:1})+" mil":"R$ "+Math.round(n).toLocaleString("pt-BR");
 const LV={R:"CRÍTICO",Y:"ATENÇÃO",G:"SAUDÁVEL",C:"SEM LEITURA"},IMPN={3:"Alto",2:"Médio",1:"Baixo"};
 const contaDe=p=>D.contas.find(c=>c.id==p.conta_id)||{};
-function prazoTxt(p){if(!p.prazo)return'<b class="dim">Sem prazo</b>';const d=Math.round((new Date(p.prazo)-new Date(D.hoje))/864e5);return`<b class="${d<0?"late":d<=2?"soon":""}">${d<0?"Atrasado "+(-d)+" d":d==0?"Hoje":d==1?"Amanhã":"em "+d+" dias"}</b><small>${fd(p.prazo)}</small>`}
-function row(p){const c=contaDe(p),cor=p.farol.cor,pr=p.prioridade;
- return`<article class="fr ${cor}" onclick="edit(${p.id})"><div class="fh"><span class="lvl ${cor}">${LV[cor]}</span><b>${esc(p.conta)}</b><span class="sep">/</span><span class="pn">${esc(p.nome)}</span><span class="pill">${p.tipo}</span><span class="pri" data-tip="Prioridade ${pr.nivel}">P${pr.score}</span></div>
+const lvb=n=>`<span class="lvb l${n}"><i></i><i></i><i></i></span>`;
+function idade(p){const d=Math.round((new Date(D.hoje)-new Date(p.ultima_atualizacao))/864e5);return d<=0?"<b>Atualizado hoje</b>":d==1?"<b>Atualizado ontem</b>":d<4?`<b>Atualizado há ${d} dias</b>`:`<b class="soon">Sem atualização há ${d} dias</b>`}
+function prazoTxt(p){if(!p.prazo)return["Implantação","Integração","Melhoria"].includes(p.tipo)?'<b class="pend" data-tip="Sem prazo, o farol fica sem leitura">⚠ Definir</b>':'<b class="dim">Não definido</b>';const d=Math.round((new Date(p.prazo)-new Date(D.hoje))/864e5);return`<b class="${d<0?"late":d<=2?"soon":""}">${d<0?"Atrasado "+(-d)+" d":d==0?"Hoje":d==1?"Amanhã":"em "+d+" dias"}</b><small>${fd(p.prazo)}</small>`}
+function row(p){const c=contaDe(p),cor=p.farol.cor,pr=p.prioridade,pend=!p.proxima_acao;
+ return`<article class="fr ${cor}" onclick="edit(${p.id})"><div class="fh"><span class="lvl ${cor}">${LV[cor]}</span><b>${esc(p.conta)}</b><span class="sep">/</span><span class="pn">${esc(p.nome)}</span><span class="pill">${p.tipo}</span><span class="prc" data-tip="Pontuação de 3 a 9 = impacto + urgência + risco. P${pr.score} é prioridade ${pr.nivel}.">Prioridade ${pr.nivel} · <b>${pr.score}</b>/9</span></div>
 <div class="why">${esc(p.farol.motivo)}</div>
-<div class="fm"><div><span class="lb">IMPACTO</span><b class="im${pr.impacto}">${IMPN[pr.impacto]}</b></div><div><span class="lb">MRR</span><b>${mil(c.mrr||0)}</b></div><div><span class="lb">RESPONSÁVEL</span><b>${esc(c.responsavel)||"—"}</b>${p.bloqueio_dono?`<small class="blk">⛔ ${esc(p.bloqueio_dono)}</small>`:""}</div><div><span class="lb">PRAZO</span>${prazoTxt(p)}</div>
-<div class="nx" onclick="editProx(event,${p.id})" data-tip="Clique para editar"><span class="lb">PRÓXIMA AÇÃO</span>${p.proxima_acao?`<b>→ ${esc(p.proxima_acao)}</b>`:'<b class="def">Definir ✎</b>'}</div></div>
-<div class="fa"><details onclick="event.stopPropagation()"><summary>Por que esta prioridade?</summary><ul>${pr.fatores.map(w=>"<li>"+esc(w)+"</li>").join("")}</ul></details><button class="btn s sm" onclick="event.stopPropagation();edit(${p.id})">Ver projeto</button></div></article>`}
+<div class="fm"><div><span class="lb">IMPACTO</span><b>${lvb(pr.impacto)}${IMPN[pr.impacto]}</b></div><div><span class="lb">MRR</span><b>${mil(c.mrr||0)}</b></div><div><span class="lb">ATUALIZAÇÃO</span>${idade(p)}</div><div><span class="lb">RESPONSÁVEL</span><b>${esc(c.responsavel)||"—"}</b>${p.bloqueio_dono?`<small class="blk">⛔ ${esc(p.bloqueio_dono)}</small>`:""}</div><div><span class="lb">PRAZO</span>${prazoTxt(p)}</div></div>
+<div class="nx ${pend?"pend":""}" onclick="editProx(event,${p.id})" data-tip="Clique para editar">${pend?'<span class="lb">⚠ AÇÃO PENDENTE</span><b>Defina a próxima ação <em>✎</em></b>':`<span class="lb">PRÓXIMA AÇÃO</span><b>→ ${esc(p.proxima_acao)}<em>✎</em></b>`}</div>
+<div class="fa"><details onclick="event.stopPropagation()"><summary>Por que esta prioridade?</summary><div class="why2"><span class="lb">POR QUE ESTÁ EM P${pr.score}?</span><ul>${pr.fatores.map(w=>"<li>"+esc(w)+"</li>").join("")}</ul><div class="fb"><div>Impacto ${lvb(pr.impacto)}</div><div>Urgência ${lvb(pr.urgencia)}</div><div>Risco ${lvb(pr.risco)}</div></div><div class="m">Impacto ${pr.impacto} + urgência ${pr.urgencia} + risco ${pr.risco} = ${pr.score} de 9</div></div></details><a class="lk vp" onclick="event.stopPropagation();edit(${p.id})">Ver projeto →</a></div></article>`}
 let nxCancel=false;
-function editProx(ev,id){ev.stopPropagation();const el=ev.currentTarget;if(el.querySelector("input"))return;const p=D.projetos.find(x=>x.id==id);el.removeAttribute("data-tip");el.innerHTML=`<span class="lb">PRÓXIMA AÇÃO</span><input class="nxi" value="${esc(p.proxima_acao)}" placeholder="Qual é o próximo passo?" onclick="event.stopPropagation()" onkeydown="nxKey(event)" onblur="nxSave(${id},this.value)">`;el.querySelector("input").focus()}
+function editProx(ev,id){ev.stopPropagation();const el=ev.currentTarget;if(el.querySelector("input"))return;const p=D.projetos.find(x=>x.id==id);el.removeAttribute("data-tip");el.classList.remove("pend");el.innerHTML=`<span class="lb">PRÓXIMA AÇÃO</span><input class="nxi" value="${esc(p.proxima_acao)}" placeholder="Qual é o próximo passo?" onclick="event.stopPropagation()" onkeydown="nxKey(event)" onblur="nxSave(${id},this.value)">`;el.querySelector("input").focus()}
 function nxKey(e){if(e.key=="Enter")e.target.blur();if(e.key=="Escape"){nxCancel=true;e.target.blur()}}
 async function nxSave(id,v){if(nxCancel){nxCancel=false;render();return}const p=D.projetos.find(x=>x.id==id);if((p.proxima_acao||"")==v.trim()){render();return}try{await api("/projetos/"+id,json({proxima_acao:v},"PATCH"));toast("Próxima ação atualizada");await load()}catch(e){toast(errs(e));render()}}
 /* ===== 10. VISÃO GERAL (home): faixa de indicadores, Foco de hoje, MRR em risco, Bloqueios, Movimentações ===== */
@@ -150,21 +161,21 @@ const tr=(s,n=38)=>s&&s.length>n?s.slice(0,n)+"…":s;
 const hz=h=>h.campo=="farol"?`Farol: ${NOME[h.valor_anterior]||h.valor_anterior} → ${NOME[h.valor_novo]||h.valor_novo}`:(h.campo=="conta"||h.campo=="projeto")?`${h.campo=="conta"?"Conta":"Projeto"} ${h.valor_novo}`:`${CAMPOS[h.campo]||h.campo}: ${tr(h.valor_anterior)||"vazio"} → ${tr(h.valor_novo)||"vazio"}`;
 const hora=iso=>{const d=new Date(iso+"Z"),h=new Date();return d.toDateString()==h.toDateString()?d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"}):d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})+" "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})};
 async function dash(){const r=D.resumo;let H=[];try{H=await api("/historico?limit=8")}catch(e){}
- const top=D.projetos.filter(p=>p.farol.cor!="G").slice(0,6),ativas=D.contas.filter(c=>!c.churn),pior={};
+ const nAt=D.projetos.filter(p=>p.farol.cor!="G").length,top=D.projetos.filter(p=>p.farol.cor!="G").slice(0,6),ativas=D.contas.filter(c=>!c.churn),pior={};
  D.projetos.forEach(p=>{const k={R:3,Y:2}[p.farol.cor]||0;if(k>(pior[p.conta_id]||0))pior[p.conta_id]=k});
  const crit=ativas.filter(c=>pior[c.id]==3).sort((a,b)=>b.mrr-a.mrr),aten=ativas.filter(c=>pior[c.id]==2).sort((a,b)=>b.mrr-a.mrr),sm=a=>a.reduce((s,c)=>s+c.mrr,0),mc=sm(crit),ma=sm(aten),tot=sm(ativas)||1;
- const bd=Object.entries(r.bloqueios_por_dono).sort((a,b)=>b[1]-a[1]),niv=TIERS.map(t=>[t,ativas.filter(c=>c.nivel==t).reduce((s,c)=>s+c.mrr,0)]),mx=Math.max(...niv.map(n=>n[1]),1),pj=Math.max(r.projetos,1);
+ const lista=[...crit,...aten],prob=c=>D.projetos.filter(p=>p.conta_id==c.id&&(p.farol.cor=="R"||p.farol.cor=="Y")).map(p=>p.nome).join(", "),pct=Math.round((mc+ma)/tot*100),bd=Object.entries(r.bloqueios_por_dono).sort((a,b)=>b[1]-a[1]),niv=TIERS.map(t=>[t,ativas.filter(c=>c.nivel==t).reduce((s,c)=>s+c.mrr,0)]),mx=Math.max(...niv.map(n=>n[1]),1),pj=Math.max(r.projetos,1);
  const st=(c,n,l)=>`<div class="st ${c}" onclick="go('p','${c}')"><b>${n}</b><span>${dot(c)}${l}</span></div>`;
- return`<div class="strip">${st("R",r.vermelho,r.vermelho==1?"crítico":"críticos")}${st("Y",r.amarelo,"em atenção")}${st("G",r.verde,r.verde==1?"saudável":"saudáveis")}${st("C",r.cinza,"sem leitura")}
+ return`<div class="strip">${st("R",r.vermelho,r.vermelho==1?"crítico":"críticos")}${st("Y",r.amarelo,"atenção")}${st("G",r.verde,r.verde==1?"saudável":"saudáveis")}${st("C",r.cinza,"sem leitura")}
 <div class="mini"><div><b>${r.contas_ativas}</b>contas</div><div><b>${r.projetos}</b>projetos</div><div><b>${r.bloqueados}</b>bloqueios</div><div><b>${r.atrasados}</b>atrasados</div><div><b>${mil(r.mrr_ativo)}</b>MRR ativo</div></div></div>
-<div class="dist">${[["R",r.vermelho],["Y",r.amarelo],["G",r.verde],["C",r.cinza]].map(x=>x[1]?`<i class="${x[0]}" style="width:${x[1]/pj*100}%"></i>`:"").join("")}</div>
-<div class="home"><div><div class="sec"><div class="hd"><h2>⚡ Foco de hoje</h2><a class="lk" onclick="go('r')">Ver todos os riscos →</a></div><div class="sb">Contas e projetos que merecem sua atenção agora, por prioridade.</div>${top.map(row).join("")||'<div class="empty">Nada pede atenção agora.</div>'}</div>
+<div class="home"><div><div class="sec"><div class="hd"><h2>⚡ Foco de hoje</h2><a class="lk" onclick="go('r')">Ver todos os riscos →</a></div><div class="sb">${nAt==1?"1 item precisa":nAt+" itens precisam"} de atenção${nAt>top.length?", mostrando os "+top.length+" primeiros":""}. Contas e projetos ordenados por prioridade.</div>${top.map(row).join("")||'<div class="empty">Nada pede atenção agora.</div>'}</div>
 <div class="sec"><div class="hd"><h2>🕐 Últimas movimentações</h2><a class="lk" onclick="go('h')">Ver histórico →</a></div>${H.length?`<div class="tl">${H.map(h=>`<div class="it"><div class="tm">${hora(h.em)}</div><b>${esc(h.rotulo)}</b><div class="m">${esc(hz(h))}</div></div>`).join("")}</div>`:'<div class="empty">Nenhuma movimentação registrada ainda.</div>'}</div></div>
-<div><div class="sec"><div class="hd"><h2>💰 MRR em risco</h2></div><div class="big">${mil(mc+ma)}</div><div class="m">em ${crit.length+aten.length} contas com projeto crítico ou em atenção · ${Math.round((mc+ma)/tot*100)}% do MRR ativo</div>
+<div><div class="sec"><div class="hd"><h2>💰 MRR em risco</h2></div><div class="big">${mil(mc+ma)}</div><div class="m">${lista.length} ${lista.length==1?"conta":"contas"} · ${pct}% do MRR ativo</div>
 <div class="rk"><i class="R" style="width:${mc/tot*100}%"></i><i class="Y" style="width:${ma/tot*100}%"></i></div>
 <div class="ln">${dot("R")}Crítico<span class="v">${mil(mc)}</span></div><div class="ln">${dot("Y")}Atenção<span class="v">${mil(ma)}</span></div>
-${crit.slice(0,4).map(c=>`<div class="ln m" style="cursor:pointer" onclick="conta(${c.id})"><span>${esc(c.nome)}</span><span class="v">${mil(c.mrr)}</span></div>`).join("")}
-<div class="sb" style="margin-top:8px">MRR total das contas com projeto em risco, não só do projeto.</div></div>
+<div style="margin-top:8px">${lista.slice(0,4).map(c=>`<div class="ra" onclick="conta(${c.id})" data-tip="Abrir conta e projetos">${dot(pior[c.id]==3?"R":"Y")}<div><b>${esc(c.nome)}</b><small class="m">${esc(prob(c))}</small></div><span class="v">${mil(c.mrr)}</span></div>`).join("")}</div>
+${lista.length>4?`<div class="ln"><span class="m">+ ${lista.length-4} ${lista.length-4==1?"outra conta":"outras contas"}</span><a class="lk v" onclick="go('r')">Ver todas →</a></div>`:`<div class="ln"><a class="lk" onclick="go('r')">Ver riscos →</a></div>`}
+<div class="sb" style="margin-top:6px">MRR total das contas com projeto em risco, não só do projeto.</div></div>
 <div class="sec"><div class="hd"><h2>🚧 Bloqueios</h2><a class="lk" onclick="go('b')">Ver →</a></div><div class="big">${r.bloqueados}</div><div class="m" style="margin-bottom:6px">${r.bloqueados==1?"projeto bloqueado":"projetos bloqueados"}</div>
 ${bd.length?bd.map(e=>`<div class="bq" onclick="go('b')"><div class="t"><b>${esc(cap(e[0].replace("Aguardando ","")))}</b><span>${e[1]}</span></div><div class="m">${D.projetos.filter(p=>p.bloqueio_dono==e[0]).map(p=>esc(p.conta)).join(", ")}</div></div>`).join(""):'<div class="m">Nenhum bloqueio.</div>'}</div>
 <div class="sec"><div class="hd"><h2>MRR por nível</h2></div>${niv.map(n=>`<div class="hb"><span class="lb">${n[0]}</span><span class="tr"><i style="width:${n[1]/mx*100}%"></i></span><span class="vl">${Math.round(n[1]/tot*100)}% · ${mil(n[1])}</span></div>`).join("")}<div class="sb" style="margin-top:8px">Cinza = sem informação suficiente; nunca conta como verde.</div></div></div></div>`}
@@ -246,14 +257,14 @@ async function conf(){const fm=new FormData();fm.append("arquivo",FILE);try{cons
 /* ===== 17. NAVEGAÇÃO, CABEÇALHO E CARGA ===== */
 const TIT={c:["Contas","Sua carteira de clientes, com filtros por nível, complexidade, segmento e contato."],p:["Projetos","Todos os projetos ativos, por prioridade."],r:["Riscos","Projetos críticos e em atenção, por prioridade."],b:["Bloqueios","Projetos bloqueados e quem precisa atuar."],h:["Histórico","Alterações registradas, da mais recente para a mais antiga."],n:["Novo cadastro","Cadastre uma conta com todos os dados ou um novo projeto."],i:["Importar dados","Excel, CSV ou JSON, com validação antes de gravar."],u:["Usuários","Gerencie quem acessa o Farol."]};
 const MES=["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"],DIAS=["Domingo","Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado"];
-function menuNav(){const r=D?D.resumo:{},adm=ME&&ME.papel=="admin",it=(k,i,l,c)=>`<button class="ni ${tab==k?"on":""}" onclick="go('${k}')"><i>${i}</i>${l}${c!=null?`<span class="ct">${c}</span>`:""}</button>`;
- return it("d","◉","Visão geral")+`<div class="ng">MINHA CARTEIRA</div>`+it("c","▣","Contas",r.contas_ativas)+it("p","☰","Projetos",r.projetos)+`<div class="ng">ATENÇÃO</div>`+it("r","⚡","Riscos",(r.vermelho||0)+(r.amarelo||0))+it("b","⛔","Bloqueios",r.bloqueados)+it("h","◷","Histórico")+`<div class="ng">GERENCIAR</div>`+it("n","＋","Novo cadastro")+it("i","⇪","Importar dados")+(adm?it("u","⚙","Usuários"):"")}
+function menuNav(){const r=D?D.resumo:{},adm=ME&&ME.papel=="admin",it=(k,i,l,c,x="")=>`<button class="ni ${x} ${tab==k?"on":""}" onclick="go('${k}')"><i>${i}</i>${l}${c!=null?`<span class="ct">${c}</span>`:""}</button>`;
+ return it("d","◉","Visão geral")+`<div class="ng">MINHA CARTEIRA</div>`+it("c","▣","Contas",r.contas_ativas)+it("p","☰","Projetos",r.projetos,"hi")+`<div class="ng">ATENÇÃO</div>`+it("r","⚡","Riscos",(r.vermelho||0)+(r.amarelo||0),"hi")+it("b","⛔","Bloqueios",r.bloqueados,"hi")+it("h","◷","Histórico")+`<div class="ng">GERENCIAR</div>`+it("n","＋","Novo cadastro",null,"sm")+it("i","⇪","Importar dados",null,"sm")+(adm?it("u","⚙","Usuários",null,"sm"):"")}
 function drawer(o){$("app").classList.toggle("open",o)}
 function go(t,f){tab=t;if(f!==undefined)F.f=f;drawer(false);render()}
 function setTheme(t){document.documentElement.dataset.theme=t;try{localStorage.setItem("th",t)}catch(e){}}
 function menu(ev){ev.stopPropagation();const d=$("dd"),lt=document.documentElement.dataset.theme=="light";d.innerHTML=`<div class="who"><b>${esc(ME.nome)}</b><span>${esc(ME.email)}</span></div><button onclick="setTheme('${lt?"dark":"light"}');menu(event)">${lt?"☾ Tema escuro":"☀ Tema claro"}</button><button onclick="senhaM();$('dd').classList.remove('on')">Alterar senha</button><button onclick="sair()">Sair</button>`;d.classList.toggle("on")}
 document.addEventListener("click",()=>{const d=$("dd");if(d)d.classList.remove("on")});
-const ago=()=>{if(!LOADED)return"";const m=Math.floor((Date.now()-LOADED)/6e4);return"Dados atualizados "+(m<1?"agora":"há "+m+" min")};
+const ago=()=>{if(!LOADED)return"";const m=Math.floor((Date.now()-LOADED)/6e4);return m<1?"Atualizado agora":"Atualizado há "+m+" min"};
 setInterval(()=>{const u=$("upd");if(u)u.textContent=ago()},30000);
 async function refresh(){const b=$("rf");b.classList.add("spin");await load();b.classList.remove("spin");toast("Dados atualizados")}
 async function load(){try{D=await api("/carteira/farol");LOADED=Date.now();await render()}catch(e){if(tk())$("v").innerHTML=`<div class="box err">${esc(errs(e))}</div>`}}
