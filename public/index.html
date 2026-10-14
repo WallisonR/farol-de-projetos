@@ -7,12 +7,12 @@
 <style>
 /* ===== 1. TEMA (manual de marca Suri Shop by TOTVS) =====
    FONTES: Sora (mestre, texto) e Bricolage Grotesque (assistente 1: títulos e números grandes; uso a validar). Bebas Neue é só para vídeo e não entra.
-   CORES DO MANUAL: Deep Blue Suri #020519 (fundo) · Blue Suri #4a54ff (--brand: botões, barra ativa, preenchimentos) · Strong Blue Suri #2e1de8 (hover e texto de destaque no tema claro) · WhatsApp Green Suri #00b914 (status saudável).
+   CORES DO MANUAL: Deep Blue Suri #020519 (fundo) · Blue Suri #4a54ff (--brand: botões, barra ativa, preenchimentos) · Strong Blue Suri #2e1de8 (hover e texto de destaque no tema claro) · WhatsApp Green Suri #00b914 (disponível na paleta, não usado: o verde do farol é o de status e não muda).
    DERIVADOS: --ac é um tom claro do Blue Suri (#8f96ff) porque o azul puro tem só 3,9:1 de contraste como texto sobre o fundo escuro; superfícies --sf/--el são misturas do Deep Blue com o Blue Suri.
-   FORA DO MANUAL (semântica de status, de propósito): vermelho e amarelo. As cores "RD" da paleta (rosa, ciano, verdes claros) não são usadas, para não confundir a marca com a RD Station. */
+   CORES DO FAROL (vermelho #f06a5f, amarelo #f0b43c, verde #35c27e, cinza #7a8c99; claro: #d03a3a, #b57600, #238653, #7e8d99): NÃO ALTERAR, são semânticas de status e independem da paleta da marca. As cores "RD" da paleta (rosa, ciano, verdes claros) não são usadas, para não confundir a marca com a RD Station. */
 :root{color-scheme:dark;--bg:#020519;--sf:#090c2e;--el:#0d113c;--ln:rgba(143,150,255,.11);--ln2:rgba(143,150,255,.22);--ink:#eef0ff;--mut:#a3a9d6;--dim:#7a80b0;
- --brand:#4a54ff;--ac:#8f96ff;--acs:rgba(74,84,255,.18);--r:#f06a5f;--y:#f0b43c;--g:#00b914;--c:#8a8fa8;--rad:12px;--ff:'Sora',-apple-system,'Segoe UI',Roboto,system-ui,sans-serif;--fd:'Bricolage Grotesque','Sora',-apple-system,'Segoe UI',system-ui,sans-serif}
-:root[data-theme="light"]{color-scheme:light;--bg:#f4f5ff;--sf:#ffffff;--el:#eceeff;--ln:rgba(2,5,25,.09);--ln2:rgba(2,5,25,.18);--ink:#020519;--mut:#4b5080;--dim:#666b94;--brand:#4a54ff;--ac:#2e1de8;--acs:rgba(74,84,255,.10);--r:#c9302c;--y:#8f5f00;--g:#00780d;--c:#666b84}
+ --brand:#4a54ff;--ac:#8f96ff;--acs:rgba(74,84,255,.18);--r:#f06a5f;--y:#f0b43c;--g:#35c27e;--c:#7a8c99;--rad:12px;--ff:'Sora',-apple-system,'Segoe UI',Roboto,system-ui,sans-serif;--fd:'Bricolage Grotesque','Sora',-apple-system,'Segoe UI',system-ui,sans-serif}
+:root[data-theme="light"]{color-scheme:light;--bg:#f4f5ff;--sf:#ffffff;--el:#eceeff;--ln:rgba(2,5,25,.09);--ln2:rgba(2,5,25,.18);--ink:#020519;--mut:#4b5080;--dim:#666b94;--brand:#4a54ff;--ac:#2e1de8;--acs:rgba(74,84,255,.10);--r:#d03a3a;--y:#b57600;--g:#238653;--c:#7e8d99}
 *{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 var(--ff);-webkit-font-smoothing:antialiased}
 button{font-family:inherit;color:inherit}b{font-weight:650}small{color:var(--mut)}
