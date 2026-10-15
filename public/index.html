@@ -2,6 +2,7 @@
 <html lang="pt-BR"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Farol da Carteira · Suri Shop by TOTVS</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="icon" href="favicon.ico" sizes="any"><link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#020519">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400..800&family=Bricolage+Grotesque:wght@500..800&display=swap" rel="stylesheet">
 <style>
@@ -121,12 +122,12 @@ main{overflow-x:clip}.login .box .logo{display:none;max-width:180px;margin-botto
 @media(max-width:1100px){.fm{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:899px){.fm{grid-template-columns:1fr 1fr}.sbtn{width:auto;flex:0 0 auto}}
 </style></head><body>
 <div class="app" id="app"><div class="scrim" onclick="drawer(false)"></div>
- <aside class="side"><div class="brand"><img id="logo" src="logo.svg" alt="Suri Shop by TOTVS" style="display:none;max-width:170px" onload="this.style.display='block';$('brandtxt').style.display='none'" onerror="this.remove()"><div id="brandtxt"><b>Suri Shop by TOTVS</b><span>Farol da Carteira</span></div></div><nav id="nav"></nav><div class="sfoot">Suri Shop by TOTVS</div></aside>
+ <aside class="side"><div class="brand"><img id="logo" src="logo.svg.png" alt="Suri Shop by TOTVS" style="display:none;max-width:170px" onload="this.style.display='block';$('brandtxt').style.display='none'" onerror="this.remove()"><div id="brandtxt"><b>Suri Shop by TOTVS</b><span>Farol da Carteira</span></div></div><nav id="nav"></nav><div class="sfoot">Suri Shop by TOTVS</div></aside>
  <div class="main"><header class="top"><button class="ham" id="hm" onclick="drawer(true)" aria-label="Menu"></button><div class="tt"><div class="eyebrow" id="eb"></div><h1 id="ttl"></h1><div class="sub" id="sub"></div><div class="upd" id="upd"></div></div>
  <div class="tools"><button class="sbtn" onclick="busca()"><span id="si"></span><span class="sl">Buscar conta, projeto ou cliente…</span><kbd>Ctrl K</kbd></button><button class="ib" id="rf" onclick="refresh()" data-tip="Atualizar dados" aria-label="Atualizar dados"></button><div class="um"><button class="av" id="av" onclick="menu(event)"></button><div class="dd" id="dd"></div></div></div></header>
  <main id="v"><div class="sk"><i></i><i></i><i></i><i></i></div></main></div></div>
 <div id="toast"></div>
-<div class="login" id="login"><form class="box" onsubmit="entrar();return false"><img class="logo" src="logo.svg" alt="Suri Shop by TOTVS" onload="this.style.display='block';$('lh').style.display='none'" onerror="this.remove()"><h2 id="lh" style="margin:0 0 6px;font-size:20px;letter-spacing:0;text-transform:none;color:var(--ink)">Suri Shop by TOTVS</h2><div class="m">Farol da Carteira · acesso restrito</div>
+<div class="login" id="login"><form class="box" onsubmit="entrar();return false"><img class="logo" src="logo.svg.png" alt="Suri Shop by TOTVS" onload="this.style.display='block';$('lh').style.display='none'" onerror="this.remove()"><h2 id="lh" style="margin:0 0 6px;font-size:20px;letter-spacing:0;text-transform:none;color:var(--ink)">Suri Shop by TOTVS</h2><div class="m">Farol da Carteira · acesso restrito</div>
 <label class="fld">E-mail<input id="l_e" type="email" autocomplete="username" placeholder="nome@empresa.com"></label><label class="fld">Senha<input id="l_s" type="password" autocomplete="current-password"></label>
 <div class="err" id="l_err"></div><div class="acts"><button class="btn" id="lbtn" type="submit">Entrar</button></div></form></div>
 <script>
