@@ -466,6 +466,23 @@ def editar_conta(cid: int, body: ContaPatch, db: Session = Depends(get_db), a=De
     return dict(c_out(c, None, nomes_users(db)), avisos=w)
 
 
+@api.delete("/contas/{cid}")
+def excluir_conta(cid: int, confirmar: str = "", db: Session = Depends(get_db), a=Depends(so_admin)):
+    """Somente administradores. Exclui a conta e os projetos dela; o fato fica registrado no histórico."""
+    c = db.get(Conta, cid)
+    if not c:
+        raise HTTPException(404, "Conta não encontrada")
+    if R.norm(confirmar) != c.nome_norm:
+        falha(["Confirmação não confere: informe o nome da conta para excluí-la"])
+    ps = list(db.scalars(select(Projeto).where(Projeto.conta_id == cid)))
+    for p in ps:
+        db.delete(p)
+    log(db, a, "conta", c.id, c.nome, "conta", f"conta com {len(ps)} projeto(s)", "excluída", c.responsavel_id)
+    db.delete(c)
+    db.commit()
+    return {"ok": True, "projetos_excluidos": len(ps)}
+
+
 # ---------- projetos ----------
 @api.get("/projetos")
 def listar_projetos(db: Session = Depends(get_db), a=Depends(ator), conta_id: int | None = None, tipo: str | None = None,
