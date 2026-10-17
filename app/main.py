@@ -3,7 +3,8 @@ from contextlib import asynccontextmanager
 from datetime import date
 from pathlib import Path
 from types import SimpleNamespace
-from fastapi import FastAPI, Depends, HTTPException, Header, UploadFile, File, Query, APIRouter
+import re
+from fastapi import FastAPI, Depends, HTTPException, Header, UploadFile, File, Query, APIRouter, Request
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from sqlalchemy import select, update
@@ -65,7 +66,7 @@ def get_db():
         yield db
 
 
-def ator(authorization: str | None = Header(None), db: Session = Depends(get_db)):
+def ator(request: Request, authorization: str | None = Header(None), db: Session = Depends(get_db)):
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(401, "Faça login")
     tok = authorization[7:]
@@ -76,6 +77,8 @@ def ator(authorization: str | None = Header(None), db: Session = Depends(get_db)
     u = db.get(User, uid) if uid else None
     if not u or not u.ativo:
         raise HTTPException(401, "Sessão inválida ou expirada")
+    if u.trocar_senha and request.url.path not in ("/api/auth/eu", "/api/auth/senha"):
+        raise HTTPException(403, "Troque a senha provisória para continuar")
     return u
 
 
@@ -316,7 +319,7 @@ def atualizar_projeto(db, p, mudancas, a):
 
 
 def u_out(u):
-    return dict(id=u.id, email=u.email, nome=u.nome, papel=u.papel, ativo=u.ativo)
+    return dict(id=u.id, email=u.email, nome=u.nome, papel=u.papel, ativo=u.ativo, trocar_senha=bool(u.trocar_senha))
 
 
 # ---------- autenticação e usuários ----------
@@ -337,7 +340,7 @@ def login(body: Login, db: Session = Depends(get_db)):
 
 @api.get("/auth/eu")
 def eu(a=Depends(ator)):
-    return dict(id=a.id, email=a.email, nome=a.nome, papel=a.papel)
+    return dict(id=a.id, email=a.email, nome=a.nome, papel=a.papel, trocar_senha=bool(getattr(a, "trocar_senha", False)))
 
 
 @api.post("/auth/senha")
@@ -347,7 +350,10 @@ def trocar_senha(body: NovaSenha, a=Depends(ator), db: Session = Depends(get_db)
         falha(["Senha atual incorreta"])
     if len(body.nova) < 8:
         falha(["A nova senha precisa ter ao menos 8 caracteres"])
+    if body.nova == body.atual:
+        falha(["A nova senha precisa ser diferente da atual"])
     u.senha_hash = A.hash_senha(body.nova)
+    u.trocar_senha = False
     db.commit()
     return {"ok": True}
 
@@ -372,7 +378,7 @@ def criar_usuario(body: UserIn, db: Session = Depends(get_db), a=Depends(so_admi
         e.append("E-mail já cadastrado")
     if e:
         falha(e)
-    u = User(email=email, nome=body.nome.strip(), senha_hash=A.hash_senha(body.senha), papel=body.papel)
+    u = User(email=email, nome=body.nome.strip(), senha_hash=A.hash_senha(body.senha), papel=body.papel, trocar_senha=True)
     db.add(u); db.commit()
     return u_out(u)
 
@@ -391,11 +397,82 @@ def editar_usuario(uid: int, body: UserPatch, db: Session = Depends(get_db), a=D
         if len(d["senha"]) < 8:
             falha(["A senha precisa ter ao menos 8 caracteres"])
         u.senha_hash = A.hash_senha(d["senha"])
+        u.trocar_senha = True  # senha redefinida por administrador volta a ser provisória
     for k in ("nome", "papel", "ativo"):
         if d.get(k) is not None:
             setattr(u, k, d[k])
     db.commit()
     return u_out(u)
+
+
+class LoteUsuarios(BaseModel):
+    texto: str
+    senha: str
+    papel_padrao: str = "am"
+
+
+def _nome_do_email(email):
+    loc = email.split("@")[0]
+    return loc[:1].upper() + loc[1:]
+
+
+@api.post("/usuarios/lote")
+def criar_usuarios_em_lote(body: LoteUsuarios, db: Session = Depends(get_db), a=Depends(so_admin)):
+    """Uma linha por usuário: `email; Nome; perfil` (nome e perfil opcionais). Vários e-mails numa linha só também valem."""
+    if len(body.senha) < 8:
+        falha(["A senha padrão precisa ter ao menos 8 caracteres"])
+    if body.papel_padrao not in ("admin", "am"):
+        falha(["Perfil padrão deve ser admin ou am"])
+    itens = []
+    for i, linha in enumerate(body.texto.splitlines(), 1):
+        if not linha.strip():
+            continue
+        if linha.count("@") > 1:
+            itens += [(i, t, None, None) for t in re.split(r"[,;\s]+", linha.strip()) if t]
+        else:
+            p = [x.strip() for x in re.split(r"[;,\t]", linha)] + ["", ""]
+            itens.append((i, p[0], p[1] or None, p[2] or None))
+    if not itens:
+        falha(["Nenhum e-mail informado"])
+    vistos = {u.email for u in db.scalars(select(User))}
+    out = []
+    for linha, email, nome, perfil in itens:
+        email = email.strip().lower()
+        papel = {"admin": "admin", "administrador": "admin", "am": "am", "account manager": "am", "": body.papel_padrao, None: body.papel_padrao}.get((perfil or "").lower())
+        e = []
+        if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
+            e.append("E-mail inválido")
+        elif email in vistos:
+            e.append("E-mail já cadastrado")
+        if not papel:
+            e.append("Perfil deve ser admin ou am")
+        if not e:
+            db.add(User(email=email, nome=(nome or _nome_do_email(email)), senha_hash=A.hash_senha(body.senha), papel=papel, trocar_senha=True))
+            vistos.add(email)
+        out.append(dict(linha=linha, email=email, nome=nome or _nome_do_email(email), papel=papel, criado=not e, erros=e))
+    db.commit()
+    return dict(criados=sum(1 for x in out if x["criado"]), com_erro=sum(1 for x in out if not x["criado"]), linhas=out)
+
+
+class Atribuicao(BaseModel):
+    ids: list[int]
+    responsavel_id: int
+
+
+@api.post("/contas/atribuir")
+def atribuir_contas(body: Atribuicao, db: Session = Depends(get_db), a=Depends(so_admin)):
+    """Somente administradores: passa contas (e seus projetos) para a carteira de outro usuário."""
+    novo = db.get(User, body.responsavel_id)
+    if not novo or not novo.ativo:
+        falha(["Responsável não encontrado ou inativo"])
+    n = 0
+    for c in db.scalars(select(Conta).where(Conta.id.in_(body.ids))):
+        if c.responsavel_id != novo.id:
+            log(db, a, "conta", c.id, c.nome, "responsavel", c.responsavel_id, novo.id, novo.id)
+            c.responsavel_id = novo.id
+            n += 1
+    db.commit()
+    return {"ok": True, "atribuidas": n}
 
 
 # ---------- contas ----------
