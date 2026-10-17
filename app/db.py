@@ -39,6 +39,7 @@ class User(Base):
     senha_hash: Mapped[str] = mapped_column(String(300))
     papel: Mapped[str] = mapped_column(String(10), default="am")  # admin | am
     ativo: Mapped[bool] = mapped_column(Boolean, default=True)
+    trocar_senha: Mapped[bool] = mapped_column(Boolean, default=False)  # senha provisória: exige troca no 1º acesso
     criado_em: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
 
@@ -116,7 +117,8 @@ NOVAS_COLUNAS = {"contas": {"razao_social": "VARCHAR(200)", "cnpj": "VARCHAR(20)
                             "erp": "VARCHAR(120)", "integracoes": "TEXT", "contato_nome": "VARCHAR(120)",
                             "contato_email": "VARCHAR(160)", "contato_telefone": "VARCHAR(40)", "data_inicio": "DATE",
                             "ultimo_contato": "DATE", "proximo_contato": "DATE", "responsavel_id": "INTEGER"},
-                 "historico": {"responsavel_id": "INTEGER"}}
+                 "historico": {"responsavel_id": "INTEGER"},
+                 "users": {"trocar_senha": "BOOLEAN DEFAULT FALSE"}}
 
 
 def migrar():
