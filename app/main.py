@@ -318,6 +318,11 @@ def atualizar_projeto(db, p, mudancas, a):
     return w
 
 
+def _nome_user(db, uid):
+    u = db.get(User, uid) if uid else None
+    return u.nome if u else None
+
+
 def u_out(u):
     return dict(id=u.id, email=u.email, nome=u.nome, papel=u.papel, ativo=u.ativo, trocar_senha=bool(u.trocar_senha))
 
@@ -468,7 +473,7 @@ def atribuir_contas(body: Atribuicao, db: Session = Depends(get_db), a=Depends(s
     n = 0
     for c in db.scalars(select(Conta).where(Conta.id.in_(body.ids))):
         if c.responsavel_id != novo.id:
-            log(db, a, "conta", c.id, c.nome, "responsavel", c.responsavel_id, novo.id, novo.id)
+            log(db, a, "conta", c.id, c.nome, "responsavel", _nome_user(db, c.responsavel_id), novo.nome, novo.id)
             c.responsavel_id = novo.id
             n += 1
     db.commit()
@@ -504,6 +509,8 @@ def cadastrar_conta(body: ContaIn, db: Session = Depends(get_db), a=Depends(ator
     d = body.model_dump()
     e, w, l = R.valida_conta(d, lookup_contas(db))
     if e:
+        if a.papel != "admin":  # o AM não enxerga a carteira dos outros: explica o que fazer
+            e = [x + " (pode estar na carteira de outro AM; peça a um administrador para atribuí-la a você)" if x == "Conta já cadastrada" else x for x in e]
         falha(e, w)
     c = criar_conta(db, l, a, dono_para(db, a, d.get("responsavel_id")))
     db.commit()
@@ -537,7 +544,7 @@ def editar_conta(cid: int, body: ContaPatch, db: Session = Depends(get_db), a=De
     if novo_dono and novo_dono != c.responsavel_id:
         if not db.get(User, novo_dono):
             falha(["Responsável não encontrado"])
-        log(db, a, "conta", c.id, c.nome, "responsavel", c.responsavel_id, novo_dono, novo_dono)
+        log(db, a, "conta", c.id, c.nome, "responsavel", _nome_user(db, c.responsavel_id), _nome_user(db, novo_dono), novo_dono)
         c.responsavel_id = novo_dono
     db.commit()
     return dict(c_out(c, None, nomes_users(db)), avisos=w)
@@ -628,7 +635,7 @@ def carteira(db: Session = Depends(get_db), a=Depends(ator), responsavel_id: int
                   cinza=cnt("C"), bloqueados=sum(1 for p in ps if p["bloqueio_dono"]),
                   atrasados=sum(1 for p in ps if p["prazo"] and p["prazo"] < hoje.isoformat()),
                   mrr_ativo=round(sum(c["mrr"] for c in ativas), 2), bloqueios_por_dono=dono)
-    resp = [dict(id=i, nome=n) for i, n in users.items()] if a.papel == "admin" else []
+    resp = [dict(id=u.id, nome=u.nome, papel=u.papel, ativo=bool(u.ativo)) for u in db.scalars(select(User).order_by(User.nome))] if a.papel == "admin" else []
     return dict(hoje=hoje.isoformat(), resumo=resumo, contas=contas, projetos=ps, responsaveis=resp)
 
 
