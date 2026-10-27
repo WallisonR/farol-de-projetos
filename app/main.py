@@ -132,6 +132,7 @@ class ProjetoIn(BaseModel):
     critico: bool = False
     bloqueio_dono: str | None = None
     bloqueio_motivo: str | None = None
+    bloqueio_desde: str | None = None
     prazo: str | None = None
     proxima_acao: str | None = None
     ajuste_impacto: int = 0
@@ -144,6 +145,7 @@ class ProjetoPatch(BaseModel):
     critico: bool | None = None
     bloqueio_dono: str | None = None
     bloqueio_motivo: str | None = None
+    bloqueio_desde: str | None = None
     prazo: str | None = None
     proxima_acao: str | None = None
     ajuste_impacto: int | None = None
@@ -152,6 +154,11 @@ class ProjetoPatch(BaseModel):
 class Evento(ProjetoPatch):
     conta: str
     projeto: str
+
+
+class Conclusao(BaseModel):
+    data: str | None = None
+    nota: str | None = None
 
 
 class Login(BaseModel):
@@ -242,10 +249,18 @@ def c_out(c, n=None, users=None):
 def p_out(p, hoje):
     cor, mot = R.farol(p, hoje)
     return dict(id=p.id, conta_id=p.conta_id, conta=p.conta.nome, nome=p.nome, tipo=p.tipo, situacao=p.situacao,
-                critico=p.critico, bloqueio_dono=p.bloqueio_dono, bloqueio_motivo=p.bloqueio_motivo,
-                prazo=_d(p.prazo), proxima_acao=p.proxima_acao, ajuste_impacto=p.ajuste_impacto,
+                critico=p.critico, bloqueio_dono=p.bloqueio_dono, bloqueio_motivo=p.bloqueio_motivo, bloqueio_desde=_d(p.bloqueio_desde),
+                prazo=_d(p.prazo), proxima_acao=p.proxima_acao, ajuste_impacto=p.ajuste_impacto, criado_em=_d(p.criado_em),
+                concluido_em=_d(p.concluido_em), conclusao_nota=p.conclusao_nota,
                 ultima_atualizacao=_d(p.ultima_atualizacao), farol=dict(cor=cor, motivo=mot),
                 prioridade=R.prioridade(p, p.conta, hoje))
+
+
+def p_concl(p):
+    dias = (p.concluido_em - p.criado_em).days if p.criado_em and p.concluido_em else None
+    return dict(id=p.id, conta_id=p.conta_id, conta=p.conta.nome, nome=p.nome, tipo=p.tipo, situacao=p.situacao,
+                criado_em=_d(p.criado_em), concluido_em=_d(p.concluido_em), conclusao_nota=p.conclusao_nota,
+                ultima_atualizacao=_d(p.ultima_atualizacao), dias_ate_concluir=dias)
 
 
 def nomes_users(db):
@@ -253,12 +268,21 @@ def nomes_users(db):
 
 
 def projetos_ativos(db, a, resp_id=None):
-    q = select(Projeto).join(Conta).options(joinedload(Projeto.conta)).where(Conta.churn == False)  # noqa: E712
+    q = select(Projeto).join(Conta).options(joinedload(Projeto.conta)).where(Conta.churn == False, Projeto.concluido_em.is_(None))  # noqa: E712
     if a.papel != "admin":
         q = q.where(Conta.responsavel_id == a.id)
     elif resp_id:
         q = q.where(Conta.responsavel_id == resp_id)
     return list(db.scalars(q).unique())
+
+
+def projetos_concluidos(db, a, resp_id=None):
+    q = select(Projeto).join(Conta).options(joinedload(Projeto.conta)).where(Projeto.concluido_em.is_not(None))
+    if a.papel != "admin":
+        q = q.where(Conta.responsavel_id == a.id)
+    elif resp_id:
+        q = q.where(Conta.responsavel_id == resp_id)
+    return list(db.scalars(q.order_by(Projeto.concluido_em.desc(), Projeto.id.desc())).unique())
 
 
 def conta_visivel(db, a, cid):
@@ -287,15 +311,18 @@ def criar_projeto(db, l, a):
     p = Projeto(conta_id=conta.id, nome=l["nome"], nome_norm=l["nome_norm"], tipo=l["tipo"], situacao=l["situacao"],
                 critico=l["critico"], bloqueio_dono=l["bloqueio_dono"], bloqueio_motivo=l["bloqueio_motivo"],
                 prazo=l["prazo"], proxima_acao=l["proxima_acao"], ajuste_impacto=l["ajuste_impacto"],
-                ultima_atualizacao=date.today())
+                bloqueio_desde=l["bloqueio_desde"] or (date.today() if l["bloqueio_dono"] else None),
+                ultima_atualizacao=date.today(), criado_em=date.today())
     db.add(p); db.flush()
     log(db, a, "projeto", p.id, f"{conta.nome} / {p.nome}", "projeto", None, "cadastrado", conta.responsavel_id)
     return p
 
 
 def atualizar_projeto(db, p, mudancas, a):
+    if p.concluido_em:
+        falha(["Projeto concluído: reabra-o para editar"])
     cur = dict(conta=p.conta.nome, nome=p.nome, tipo=p.tipo, situacao=p.situacao, critico=p.critico,
-               bloqueio_dono=p.bloqueio_dono, bloqueio_motivo=p.bloqueio_motivo, prazo=p.prazo,
+               bloqueio_dono=p.bloqueio_dono, bloqueio_motivo=p.bloqueio_motivo, bloqueio_desde=p.bloqueio_desde, prazo=p.prazo,
                proxima_acao=p.proxima_acao, ajuste_impacto=p.ajuste_impacto)
     cur.update(mudancas)
     ex = existentes(db) - {(R.norm(p.conta.nome), p.nome_norm)}
@@ -303,9 +330,11 @@ def atualizar_projeto(db, p, mudancas, a):
     if e:
         falha(e, w)
     hoje = date.today()
+    if l["bloqueio_dono"] and not l["bloqueio_desde"] and not p.bloqueio_dono:   # bloqueio novo: começa hoje
+        l["bloqueio_desde"] = hoje
     antes = R.farol(p, hoje)[0]
     rotulo, dono = f"{p.conta.nome} / {p.nome}", p.conta.responsavel_id
-    for k in ("nome", "nome_norm", "tipo", "situacao", "critico", "bloqueio_dono", "bloqueio_motivo", "prazo",
+    for k in ("nome", "nome_norm", "tipo", "situacao", "critico", "bloqueio_dono", "bloqueio_motivo", "bloqueio_desde", "prazo",
               "proxima_acao", "ajuste_impacto"):
         if getattr(p, k) != l[k]:
             if k != "nome_norm":
@@ -521,8 +550,10 @@ def cadastrar_conta(body: ContaIn, db: Session = Depends(get_db), a=Depends(ator
 def detalhe_conta(cid: int, db: Session = Depends(get_db), a=Depends(ator)):
     c = conta_visivel(db, a, cid)
     hoje = date.today()
-    ps = [p_out(p, hoje) for p in db.scalars(select(Projeto).where(Projeto.conta_id == cid).options(joinedload(Projeto.conta)))]
-    return dict(c_out(c, len(ps), nomes_users(db)), projetos=ps)
+    todos = list(db.scalars(select(Projeto).where(Projeto.conta_id == cid).options(joinedload(Projeto.conta)).order_by(Projeto.id)))
+    ps = [p_out(p, hoje) for p in todos if not p.concluido_em]
+    cc = sorted((p_concl(p) for p in todos if p.concluido_em), key=lambda x: x["concluido_em"], reverse=True)
+    return dict(c_out(c, len(ps), nomes_users(db)), projetos=ps, concluidos=cc)
 
 
 @api.patch("/contas/{cid}")
@@ -570,9 +601,17 @@ def excluir_conta(cid: int, confirmar: str = "", db: Session = Depends(get_db), 
 # ---------- projetos ----------
 @api.get("/projetos")
 def listar_projetos(db: Session = Depends(get_db), a=Depends(ator), conta_id: int | None = None, tipo: str | None = None,
-                    farol: str | None = None, q: str | None = None, bloqueado: bool | None = None):
+                    farol: str | None = None, q: str | None = None, bloqueado: bool | None = None,
+                    status: str = "ativos", responsavel_id: int | None = None):
     hoje = date.today()
-    out = [p_out(p, hoje) for p in projetos_ativos(db, a)]
+    if status == "concluidos":
+        out = [p_concl(p) for p in projetos_concluidos(db, a, responsavel_id)]
+        if conta_id:
+            out = [p for p in out if p["conta_id"] == conta_id]
+        if q:
+            out = [p for p in out if R.norm(q) in R.norm(p["conta"] + " " + p["nome"])]
+        return out
+    out = [p_out(p, hoje) for p in projetos_ativos(db, a, responsavel_id)]
     if conta_id:
         out = [p for p in out if p["conta_id"] == conta_id]
     if tipo:
@@ -617,6 +656,46 @@ def editar_projeto(pid: int, body: ProjetoPatch, db: Session = Depends(get_db), 
     return dict(p_out(p, date.today()), avisos=w)
 
 
+@api.post("/projetos/{pid}/concluir")
+def concluir_projeto(pid: int, body: Conclusao, db: Session = Depends(get_db), a=Depends(ator)):
+    """Conclui o projeto: sai do farol, do foco e do MRR em risco, mas continua salvo na conta."""
+    p = projeto_visivel(db, a, pid)
+    if p.concluido_em:
+        falha(["Projeto já concluído"])
+    try:
+        d = R.parse_date(body.data) or date.today()
+    except ValueError as ex:
+        falha([str(ex)])
+    if d > date.today():
+        falha(["A data de conclusão não pode ser futura"])
+    p.concluido_em, p.conclusao_nota, p.ultima_atualizacao = d, (body.nota or "").strip() or None, date.today()
+    log(db, a, "projeto", p.id, f"{p.conta.nome} / {p.nome}", "status", "ativo", f"concluído em {d.isoformat()}", p.conta.responsavel_id)
+    db.commit()
+    return p_concl(p)
+
+
+@api.post("/projetos/{pid}/reabrir")
+def reabrir_projeto(pid: int, db: Session = Depends(get_db), a=Depends(ator)):
+    p = projeto_visivel(db, a, pid)
+    if not p.concluido_em:
+        falha(["O projeto não está concluído"])
+    p.concluido_em, p.conclusao_nota, p.ultima_atualizacao = None, None, date.today()
+    log(db, a, "projeto", p.id, f"{p.conta.nome} / {p.nome}", "status", "concluído", "reaberto", p.conta.responsavel_id)
+    db.commit()
+    return p_out(p, date.today())
+
+
+@api.delete("/projetos/{pid}")
+def excluir_projeto(pid: int, db: Session = Depends(get_db), a=Depends(ator)):
+    """Administrador ou dono da carteira. Definitivo; o registro fica no histórico."""
+    p = projeto_visivel(db, a, pid)
+    rotulo, dono, estado = f"{p.conta.nome} / {p.nome}", p.conta.responsavel_id, ("concluído" if p.concluido_em else "ativo")
+    log(db, a, "projeto", p.id, rotulo, "projeto", estado, "excluído", dono)
+    db.delete(p)
+    db.commit()
+    return {"ok": True}
+
+
 # ---------- carteira e histórico ----------
 @api.get("/carteira/farol")
 def carteira(db: Session = Depends(get_db), a=Depends(ator), responsavel_id: int | None = None):
@@ -635,6 +714,8 @@ def carteira(db: Session = Depends(get_db), a=Depends(ator), responsavel_id: int
                   cinza=cnt("C"), bloqueados=sum(1 for p in ps if p["bloqueio_dono"]),
                   atrasados=sum(1 for p in ps if p["prazo"] and p["prazo"] < hoje.isoformat()),
                   mrr_ativo=round(sum(c["mrr"] for c in ativas), 2), bloqueios_por_dono=dono)
+    n_concl = len(projetos_concluidos(db, a, responsavel_id))
+    resumo["concluidos"] = n_concl
     resp = [dict(id=u.id, nome=u.nome, papel=u.papel, ativo=bool(u.ativo)) for u in db.scalars(select(User).order_by(User.nome))] if a.papel == "admin" else []
     return dict(hoje=hoje.isoformat(), resumo=resumo, contas=contas, projetos=ps, responsaveis=resp)
 
