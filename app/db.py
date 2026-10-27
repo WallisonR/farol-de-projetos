@@ -86,6 +86,10 @@ class Projeto(Base):
     proxima_acao: Mapped[str | None] = mapped_column(Text, nullable=True)
     ajuste_impacto: Mapped[int] = mapped_column(Integer, default=0)
     ultima_atualizacao: Mapped[date] = mapped_column(Date, default=date.today)
+    concluido_em: Mapped[date | None] = mapped_column(Date, nullable=True)      # preenchido = projeto concluído (fica salvo na conta)
+    conclusao_nota: Mapped[str | None] = mapped_column(Text, nullable=True)
+    criado_em: Mapped[date | None] = mapped_column(Date, nullable=True)
+    bloqueio_desde: Mapped[date | None] = mapped_column(Date, nullable=True)
     conta = relationship("Conta", back_populates="projetos")
 
 
@@ -118,7 +122,8 @@ NOVAS_COLUNAS = {"contas": {"razao_social": "VARCHAR(200)", "cnpj": "VARCHAR(20)
                             "contato_email": "VARCHAR(160)", "contato_telefone": "VARCHAR(40)", "data_inicio": "DATE",
                             "ultimo_contato": "DATE", "proximo_contato": "DATE", "responsavel_id": "INTEGER"},
                  "historico": {"responsavel_id": "INTEGER"},
-                 "users": {"trocar_senha": "BOOLEAN DEFAULT FALSE"}}
+                 "users": {"trocar_senha": "BOOLEAN DEFAULT FALSE"},
+                 "projetos": {"concluido_em": "DATE", "conclusao_nota": "TEXT", "criado_em": "DATE", "bloqueio_desde": "DATE"}}
 
 
 def migrar():
