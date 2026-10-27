@@ -61,6 +61,7 @@ def seed(db, dono_id=None):
     for c, n, t, sit, crit, bl in PROJ:
         db.add(Projeto(conta_id=ids[c], nome=n, nome_norm=norm(n), tipo=t, situacao=sit, critico=bool(crit),
                        bloqueio_dono=bl[0] if bl else None, bloqueio_motivo=bl[1] if bl else None,
-                       ultima_atualizacao=date.today()))
+                       bloqueio_desde=date.today() if bl else None,
+                       ultima_atualizacao=date.today(), criado_em=date.today()))
     db.commit()
     return True
