@@ -145,13 +145,18 @@ def valida_projeto(d, lookup, existentes, checar_dup=True):
         e.append("Bloqueio exige motivo")
     if not dono:
         dono, motivo = None, None
+    try:
+        desde = parse_date(d.get("bloqueio_desde")) if dono else None
+    except ValueError:
+        desde = None
+        e.append("Bloqueado desde: data inválida (use dd/mm/aaaa)")
     if checar_dup and conta and nome and (ck, norm(nome)) in existentes:
-        e.append("Projeto já cadastrado nesta conta")
+        e.append("Projeto já cadastrado nesta conta (inclui os concluídos: reabra o existente ou use outro nome)")
     if not e and not prazo and tipo not in ("Acompanhamento", "Risco"):
         w.append("Sem prazo: farol ficará cinza")
     return e, w, dict(conta_nome=conta, conta_norm=ck, nome=nome, nome_norm=norm(nome), tipo=tipo,
                       situacao=str(d.get("situacao") or "").strip() or None, critico=bool(d.get("critico", False)),
-                      bloqueio_dono=dono, bloqueio_motivo=motivo, prazo=prazo,
+                      bloqueio_dono=dono, bloqueio_motivo=motivo, bloqueio_desde=desde, prazo=prazo,
                       proxima_acao=str(d.get("proxima_acao") or "").strip() or None,
                       ajuste_impacto=_ajuste(d.get("ajuste_impacto")))
 
